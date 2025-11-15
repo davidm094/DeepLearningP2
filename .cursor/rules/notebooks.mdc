@@ -1,0 +1,97 @@
+---
+description: Guía para utilizar Jupyter Notebooks en Cursor de forma eficiente usando archivos .py, optimizando la interacción con la IA.
+globs:
+  - "**/*.py"
+alwaysApply: false
+---
+# 📊 Jupyter Notebooks en Cursor: El Flujo de Trabajo Óptimo con Archivos `.py`
+
+Para desbloquear todo el potencial de la IA de Cursor en el análisis de datos, abandona los tradicionales archivos `.ipynb` y adopta un flujo de trabajo basado en archivos de Python (`.py`) de texto plano. Este enfoque permite que la IA entienda, edite y analice tu código de manera mucho más fluida y potente.
+
+---
+
+## ¿Por Qué Usar `.py` en Vez de `.ipynb`?
+
+* **🤖 Interacción Superior con la IA:** Los modelos de lenguaje como los que usa Cursor procesan texto plano de forma nativa. Un archivo `.py` es simple y directo, mientras que la estructura JSON de un `.ipynb` es compleja y puede confundir a la IA.
+* **✅ Control de Versiones Simplificado:** Hacer un `git diff` de un archivo `.py` es limpio y legible. Comparar cambios en un `.ipynb` es a menudo un caos de metadatos y salidas codificadas.
+* **⚙️ Entorno Unificado:** Trabajas en el mismo tipo de archivo para tus scripts, aplicaciones y análisis, manteniendo la consistencia en tu proyecto.
+
+---
+
+## Configuración Inicial (2 Minutos)
+
+1.  **Instala Cursor IDE:** Asegúrate de tener la última versión.
+2.  **Instala la Extensión de Jupyter:** Ve al panel de Extensiones (Extensions) y busca e instala la extensión oficial de Jupyter de Microsoft.
+3.  **Crea un Archivo `.py`:** En lugar de un `.ipynb`, simplemente crea un archivo como `analisis.py`. Aquí es donde harás toda tu magia.
+
+---
+
+## Flujo de Trabajo Esencial
+
+### 1. Creación de Celdas
+
+Cursor utiliza una sintaxis especial de comentarios para delimitar celdas dentro de un archivo `.py`.
+
+* **Para una celda de código:** Usa `# %%`
+* **Para una celda de texto (Markdown):** Usa `# %% [markdown]`
+
+```python
+# %% [markdown]
+# # Análisis Exploratorio de Datos (EDA)
+# Este es un ejemplo de cómo estructurar un análisis en un archivo .py.
+# La IA puede leer y entender fácilmente esta celda de texto.
+
+# %%
+# Importamos las librerías necesarias
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+print("Librerías importadas correctamente.")
+
+# %%
+# Creamos un DataFrame de ejemplo
+data = {
+    'edad': np.random.randint(20, 50, 100),
+    'salario': np.random.randint(30000, 120000, 100)
+}
+df = pd.DataFrame(data)
+
+df.head()
+````
+
+### 2\. Ejecución de Celdas
+
+Al lado de cada delimitador `# %%`, verás botones para **ejecutar la celda**, ejecutar las celdas anteriores, y más, exactamente como en un notebook tradicional.
+
+### 3\. El Poder de la IA en tu Análisis
+
+Aquí es donde este método brilla. Puedes pedirle a la IA que:
+
+  * "Importa el archivo `ventas.csv` y muéstrame las primeras filas".
+  * "Genera un gráfico de dispersión que relacione la edad con el salario".
+  * "Calcula las estadísticas descriptivas de este DataFrame y explícame los resultados en una celda de markdown".
+
+Cursor leerá el texto plano de tu script, ejecutará el código si es necesario, analizará la salida de texto y te sugerirá nuevas celdas de código o markdown con el análisis solicitado.
+
+-----
+
+## 💡 El Truco Clave: Cómo Analizar Gráficos con la IA
+
+Por defecto, la IA de Cursor no puede "ver" las ventanas emergentes donde se muestran los gráficos generados por Matplotlib o Seaborn. Para solucionar esto, sigue este simple pero poderoso truco:
+
+1.  **Ejecuta la Celda:** Corre el código que genera tu visualización. El gráfico aparecerá en una ventana separada.
+2.  **Toma una Captura de Pantalla:** Haz una captura de pantalla del gráfico.
+3.  **Pégala en el Chat:** Pega la imagen directamente en el panel de chat de Cursor.
+4.  **Pide el Análisis:** Ahora puedes hacer preguntas sobre la imagen. Por ejemplo: *"Basado en este gráfico, ¿qué conclusiones puedes sacar sobre la relación entre edad y salario? Escribe tus observaciones en una nueva celda de markdown."*
+
+Al "ver" la imagen, la IA puede interpretar los patrones visuales (tendencias, clusters, outliers) y generar un análisis mucho más profundo que si solo viera el código o los datos brutos.
+
+-----
+
+## Resumen de Beneficios
+
+  * **Análisis Asistido por IA más Rápido:** Menos errores y mejor comprensión del contexto por parte de la IA.
+  * **Código Limpio y Versionable:** Tu historial de Git será legible y útil.
+  * **Flujo de Trabajo Integrado:** Todo tu proyecto vive en archivos `.py`, simplificando tu entorno.

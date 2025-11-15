@@ -1,0 +1,102 @@
+---
+description: Guía para el diseño de experimentos, útil para comparar modelos de machine learning o para la planificación experimental en general.
+globs: 
+alwaysApply: false
+---
+# Diseño de Experimentos (DoE): Una Guía Práctica
+
+El **Diseño de Experimentos (DoE)**, o *Design of Experiments*, es el enfoque sistemático para planificar, ejecutar y analizar pruebas con el fin de entender cómo un conjunto de variables de entrada influye en una o más variables de salida. En lugar de cambiar factores "a ver qué pasa", el DoE proporciona un mapa para aprender de manera rápida, eficiente y con validez estadística.
+
+---
+
+## 1. ¿Para Qué Sirve el Diseño de Experimentos?
+
+Su propósito fundamental es maximizar el aprendizaje minimizando el esfuerzo experimental. Te permite:
+
+* 🎯 **Identificar los factores clave:** Determinar qué variables de entrada (**factores**) tienen un impacto real y significativo sobre el resultado (**respuesta**) y cuáles son irrelevantes.
+* 📈 **Cuantificar y optimizar:** No solo saber *qué* influye, sino *cuánto*. Permite encontrar la combinación óptima de niveles de factores para maximizar o minimizar una respuesta, o para alcanzar un valor objetivo.
+* 🤝 **Entender interacciones:** Descubrir si el efecto de un factor depende del nivel de otro. A veces, la clave no está en los factores individuales, sino en su combinación.
+* 💡 **Tomar decisiones basadas en datos:** Proporcionar una base sólida para mejorar un proceso, desarrollar un producto o configurar un modelo, sabiendo que las conclusiones son estadísticamente sólidas.
+
+---
+
+## 2. Conceptos Clave del DoE
+
+Para diseñar un buen experimento, es crucial dominar el siguiente vocabulario:
+
+#### Elementos Fundamentales
+
+* **Unidad Experimental:** Es el "sujeto" al que se le aplica una prueba. Puede ser un modelo de IA durante un entrenamiento, un lote de producción, un usuario en una prueba A/B, etc.
+* **Factores:** Son las **variables independientes** que manipulas intencionalmente porque crees que afectan el resultado.
+    * **Cuantitativos:** Numéricos (ej., `learning_rate`, número de neuronas, temperatura).
+    * **Cualitativos:** Categóricos (ej., tipo de optimizador `['Adam', 'SGD']`, función de activación `['ReLU', 'Sigmoid']`).
+* **Niveles:** Son los valores específicos que asignas a cada factor en el experimento (ej., para el factor `learning_rate`, los niveles podrían ser `0.01`, `0.001`, y `0.0001`).
+* **Tratamiento:** Es una combinación única de niveles de todos los factores que se aplica a una unidad experimental. Si tienes 2 factores con 3 niveles cada uno, tienes `3 x 3 = 9` tratamientos distintos.
+
+#### Tipos de Variables
+
+* **Variable de Respuesta (o Dependiente):** Es la variable de salida que mides para evaluar el efecto de los factores (ej., *accuracy*, *RMSE*, tiempo de inferencia, costo de entrenamiento). Debe ser medible y relevante para tu objetivo.
+* **Variable Interviniente (o de Ruido):** Es cualquier factor que podría afectar la respuesta pero que *no* estás estudiando activamente. La gestión de estas variables es crucial.
+    * **Controlables:** Se mantienen constantes para que no introduzcan "ruido" (ej., fijar la semilla aleatoria `random_seed`, usar siempre la misma versión de librerías).
+    * **No Controlables:** No se pueden fijar (ej., latencia de red, carga del servidor). Su efecto se mitiga mediante la aleatorización.
+
+#### Principios Estadísticos
+
+* **Repetición:** Repetir un mismo tratamiento varias veces. Esto es vital para estimar la variabilidad natural o "error experimental" (ej., entrenar un modelo 3 veces con los mismos hiperparámetros para promediar el efecto de la inicialización aleatoria de pesos).
+* **Aleatorización:** Asignar los tratamientos a las unidades experimentales en un orden aleatorio. Esto ayuda a promediar el efecto de las variables intervinientes no controladas y previene sesgos sistemáticos.
+* **Bloques (Blocking):** Es una técnica para neutralizar el efecto de una variable interviniente conocida. Si tienes que correr experimentos en dos GPUs diferentes (y crees que la GPU puede influir), tratas a cada GPU como un "bloque" y te aseguras de correr todos los tratamientos en ambas.
+
+#### Análisis e Interpretación
+
+* **Efecto de un Factor:** Es el cambio promedio en la respuesta cuando se cambia el nivel de ese factor.
+* **Interacción entre Factores:** Ocurre cuando el efecto de un factor cambia según el nivel de otro. **Ejemplo:** El optimizador 'Adam' puede ser mejor con un `learning_rate` alto, mientras que 'SGD' es mejor con uno bajo. El efecto del "optimizador" depende del "learning_rate".
+* **Análisis de Varianza (ANOVA):** Es la herramienta estadística principal en DoE. Descompone la variabilidad total de los datos y determina si la variación causada por tus factores es estadísticamente significativa en comparación con la variación aleatoria (el ruido).
+* **Valor p (p-value):** El resultado clave del ANOVA. Un **valor p bajo (usualmente < 0.05)** es una fuerte evidencia en contra de la hipótesis nula (la cual postula que el factor *no* tiene efecto), lo que te permite concluir que el factor es **significativo**.
+
+---
+
+## 3. El Ciclo Experimental en 6 Pasos
+
+El DoE no es lineal, es un ciclo de aprendizaje iterativo.
+
+1.  🧐 **Definir el Problema y el Objetivo:** Sé específico. ¿Qué pregunta quieres responder? ¿Qué métrica quieres mejorar? (Ej: "Determinar qué combinación de optimizador y `learning_rate` minimiza el *RMSE* de nuestro modelo de regresión").
+2.  🔬 **Seleccionar Factores, Niveles y Respuesta:**
+    * Haz una lluvia de ideas de todos los factores posibles.
+    * Elige los más prometedores para tu experimento actual.
+    * Define un rango de niveles realista para cada factor.
+    * Asegúrate de que tu variable de respuesta se pueda medir de forma consistente.
+3.  📐 **Elegir el Diseño Experimental:** Decide la estructura de tu experimento (ej., factorial completo, factorial fraccionado) en función de tus objetivos, número de factores y recursos (tiempo, costo computacional).
+4.  🧪 **Ejecutar el Experimento:** Sigue el plan rigurosamente. ¡No olvides **aleatorizar** el orden de las corridas! Documenta cada resultado con precisión.
+5.  📊 **Analizar los Datos:**
+    * Primero, visualiza los datos. Busca patrones, tendencias y valores atípicos.
+    * Aplica las herramientas estadísticas (como ANOVA) para identificar los efectos e interacciones significativos.
+    * Calcula la magnitud de dichos efectos.
+6.  ✍️ **Concluir y Recomendar:**
+    * Traduce los resultados estadísticos a un lenguaje práctico.
+    * Formula conclusiones claras ("El optimizador 'Adam' con un `learning_rate` de 0.001 es la mejor configuración encontrada").
+    * Recomienda los siguientes pasos: implementar la mejora, o diseñar un nuevo experimento para refinar los hallazgos. **Documenta todo**.
+
+---
+
+## 4. Ejemplos Prácticos
+
+#### Ejemplo 1: Optimización de un Modelo de IA
+
+* **Objetivo:** Encontrar la combinación de `optimizador` y `número de neuronas` que maximiza el *accuracy* de un clasificador.
+* **Factores y Niveles:**
+    * Factor A (Cualitativo): **Optimizador** -> Niveles: `['Adam', 'SGD']`
+    * Factor B (Cuantitativo): **Nº Neuronas** -> Niveles: `[16, 32, 64]`
+* **Diseño:** Factorial completo 2x3 (6 tratamientos en total).
+* **Respuesta:** *Accuracy* en el set de validación.
+* **Repeticiones:** Realizar 3 repeticiones por cada tratamiento (total: 18 corridas) para promediar la aleatoriedad de la inicialización de pesos.
+* **Análisis:** Un ANOVA podría revelar si el `optimizador` es significativo, si el `Nº de Neuronas` es significativo, y si existe una **interacción** entre ellos.
+
+#### Ejemplo 2: Predicción de Demanda de Buses (SITP)
+
+* **Objetivo:** Entender qué factores (algorítmicos y del problema) afectan más el error (*RMSE*) y el tiempo de entrenamiento.
+* **Factores y Niveles:**
+    * Factor A: **Función de Activación** -> `['ReLU', 'Tanh']`
+    * Factor B: **División de Datos** -> `['Día de semana', 'Fin de semana']`
+    * Factor C: **Algoritmo Genético (AG)** -> `['Selección A', 'Selección B']`
+* **Respuestas:** *RMSE* y *Tiempo de Entrenamiento*.
+* **Conceptos Ilustrados:** Uso de factores cualitativos, múltiples variables de respuesta, y la necesidad de **bloquear** o **fijar** otras variables como la ruta del bus o los recursos computacionales para obtener comparaciones justas.

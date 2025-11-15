@@ -1,0 +1,48 @@
+name: rnn_env
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  # --- Core ---
+  - python=3.11
+  - pip
+  - numpy
+  - pandas
+  - scipy
+  - scikit-learn
+
+  # --- Notebooks & visualización ---
+  - jupyterlab
+  - matplotlib
+  - seaborn
+
+  # --- NLP utilidades (para preprocesar texto) ---
+  - nltk
+  - spacy
+
+  # --- ML complementario (opcional) ---
+  - xgboost
+  - lightgbm
+
+  # --- CUDA runtime mediante conda (recomendado para TF y ecosistema) ---
+  # Ajusta si tu driver es diferente. CUDA 12.x funciona con drivers recientes.
+  - cuda-version=12.9
+
+  # --- Paquetes pip (DL principal) ---
+  - pip:
+      # TensorFlow GPU (2.19.0 es estable y compatible con CUDA moderno)
+      - tensorflow==2.19.0
+      - tensorflow-text==2.19.0
+      - tensorflow-hub
+      - tf-keras
+
+      # PyTorch
+      # Nota: pip puede instalar CPU por defecto; si necesitas GPU,
+      # considera instalar con índice oficial de PyTorch para CUDA:
+      #   pip install --index-url https://download.pytorch.org/whl/cu126 torch==2.7.0
+      - torch==2.7.0
+
+      # Kernel compiler para PyTorch (ligado a GPU)
+      - triton==3.3.0
+
+
