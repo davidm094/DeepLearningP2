@@ -1,0 +1,24 @@
+{
+  "experiment_id": "C06",
+  "created_at": "2025-11-17T03:52:04.975347+00:00",
+  "dataset_path": "data/Big_AHR.csv",
+  "cleaning": "stem",
+  "nlp_method": "keras_tokenizer",
+  "embedding": "word2vec",
+  "embedding_dim": 128,
+  "max_len": 256,
+  "vocab_size": 17106,
+  "num_folds": 3,
+  "folds": [
+    1,
+    2,
+    3
+  ],
+  "tokenizer_path": "artifacts/data/C06/tokenizer.json",
+  "vectorizer_path": null,
+  "embedding_matrix": "artifacts/data/C06/embedding_matrix.npy",
+  "clean_cache": "artifacts/cache/clean_stem.joblib",
+  "fold_indices_path": "artifacts/cache/folds_seed42_k3.json",
+  "notes": "C06 stem+tokenizer+word2vec",
+  "seed": 42
+}

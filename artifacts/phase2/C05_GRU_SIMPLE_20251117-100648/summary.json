@@ -1,0 +1,83 @@
+{
+  "folds": [
+    {
+      "f1_macro": 0.08725892029627834,
+      "recall_neg": 1.0,
+      "precision_pos": 0.0,
+      "confusion_matrix": [
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.9973614775725593,
+          0.002638522427440633,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "fold": 1,
+      "train_time_sec": 11.964470507999067,
+      "epochs_ran": 6
+    },
+    {
+      "f1_macro": 0.08540856964637013,
+      "recall_neg": 1.0,
+      "precision_pos": 0.0,
+      "confusion_matrix": [
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "fold": 2,
+      "train_time_sec": 10.326760212992667,
+      "epochs_ran": 6
+    },
+    {
+      "f1_macro": 0.08540856964637013,
+      "recall_neg": 1.0,
+      "precision_pos": 0.0,
+      "confusion_matrix": [
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "fold": 3,
+      "train_time_sec": 10.721236229001079,
+      "epochs_ran": 6
+    }
+  ],
+  "mean_f1_macro": 0.08602535319633953,
+  "mean_recall_neg": 1.0,
+  "mean_precision_pos": 0.0,
+  "mean_epochs_ran": 6.0
+}

@@ -1,0 +1,24 @@
+{
+  "experiment_id": "C01",
+  "created_at": "2025-11-17T03:36:03.349612+00:00",
+  "dataset_path": "data/Big_AHR.csv",
+  "cleaning": "baseline",
+  "nlp_method": "keras_tokenizer",
+  "embedding": "learned",
+  "embedding_dim": 128,
+  "max_len": 256,
+  "vocab_size": 30001,
+  "num_folds": 3,
+  "folds": [
+    1,
+    2,
+    3
+  ],
+  "tokenizer_path": "/home/david/github/DeepLearningP2/artifacts/data/C01/tokenizer.json",
+  "vectorizer_path": null,
+  "embedding_matrix": null,
+  "clean_cache": "artifacts/cache/clean_baseline.joblib",
+  "fold_indices_path": "artifacts/cache/folds_seed42_k3.json",
+  "notes": "C01 baseline+tokenizer+learned",
+  "seed": 42
+}

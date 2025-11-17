@@ -6,7 +6,10 @@ Dejar todo listo para:
 ### Requisitos
 - Conda/Miniconda/Mamba instalado.
 - GPU NVIDIA con drivers actualizados (detectado: RTX 3090, driver 581.57).
-- WSL2/Linux OK. No es necesario `nvcc` para entrenar; solo si compilas kernels.
+- WSL2/Linux OK. Para entrenar en GPU se requiere el toolchain CUDA 12.6 (incluye `ptxas`/`libdevice`). Instala en el entorno:
+  ```bash
+  conda install -n <env> -c conda-forge cuda-version=12.6 cuda-nvcc=12.6
+  ```
 
 ### Opción A (recomendado): Replicar EXACTO el ambiente actual
 Esto utiliza un lockfile congelado de tu entorno actual.
@@ -45,6 +48,7 @@ python gpu_check.py
 
 Notas sobre GPU:
 - PyTorch GPU por pip suele requerir usar el índice oficial de PyTorch para CUDA (si tu rueda no trae `+cuXXX` podrías tener CPU). En esta repo, la réplica exacta del entorno actual usa `torch 2.7.0+cu126`. Si la plantilla no toma la rueda CUDA automáticamente, sigue las indicaciones en consola o instala con índice de PyTorch.
+- TensorFlow 2.19 + XLA necesita `ptxas` y `libdevice`. Si aparecen errores tipo “No PTX compilation provider/libdevice not found”, ejecuta el comando de instalación anterior para añadir `cuda-nvcc`.
 
 ### Troubleshooting rápido
 - Si `torch.cuda.is_available()` es False:

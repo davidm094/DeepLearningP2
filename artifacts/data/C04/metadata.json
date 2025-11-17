@@ -1,0 +1,24 @@
+{
+  "experiment_id": "C04",
+  "created_at": "2025-11-17T03:39:42.348742+00:00",
+  "dataset_path": "data/Big_AHR.csv",
+  "cleaning": "lemmatize",
+  "nlp_method": "keras_tokenizer",
+  "embedding": "word2vec",
+  "embedding_dim": 128,
+  "max_len": 256,
+  "vocab_size": 25223,
+  "num_folds": 3,
+  "folds": [
+    1,
+    2,
+    3
+  ],
+  "tokenizer_path": "/home/david/github/DeepLearningP2/artifacts/data/C04/tokenizer.json",
+  "vectorizer_path": null,
+  "embedding_matrix": "/home/david/github/DeepLearningP2/artifacts/data/C04/embedding_matrix.npy",
+  "clean_cache": "artifacts/cache/clean_lemmatize.joblib",
+  "fold_indices_path": "artifacts/cache/folds_seed42_k3.json",
+  "notes": "C04 lemmatize+tokenizer+word2vec",
+  "seed": 42
+}

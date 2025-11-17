@@ -1,0 +1,62 @@
+data:
+  path: data/Big_AHR.csv
+  text_column: review_text
+  label_column: label
+  delimiter: ","
+  encoding: utf-8
+  lowercase: true
+  strip_text: true
+  max_len: 256
+  vocab_size: 30000
+  oov_token: "<OOV>"
+  num_folds: 5
+  seed: 42
+
+training:
+  batch_size: 128
+  epochs: 20
+  learning_rate: 0.0005
+  optimizer: adam
+  loss: sparse_categorical_crossentropy
+  class_weight: true
+  class_weight_multipliers:
+    "0": 1.2
+  callbacks:
+    early_stopping:
+      monitor: val_loss
+      patience: 5
+      mode: min
+      restore_best_weights: true
+      min_delta: 0.002
+    reduce_lr_on_plateau:
+      monitor: val_loss
+      factor: 0.5
+      patience: 3
+      min_lr: 5.0e-5
+      mode: min
+
+embedding:
+  output_dim: 128
+
+models:
+  simple_rnn:
+    units: 128
+    dropout: 0.2
+    post_rnn_dropout: 0.2
+  lstm:
+    units: 64
+    dropout: 0.0
+    recurrent_dropout: 0.0
+    post_rnn_dropout: 0.2
+  gru:
+    units: 64
+    dropout: 0.0
+    recurrent_dropout: 0.0
+    post_rnn_dropout: 0.2
+
+metrics:
+  - f1_macro
+  - recall_neg
+  - precision_pos
+  - confusion_matrix
+

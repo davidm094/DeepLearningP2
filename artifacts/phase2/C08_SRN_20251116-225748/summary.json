@@ -1,0 +1,28 @@
+{
+  "folds": [
+    {
+      "f1_macro": 0.12997533091770277,
+      "recall_neg": 0.2143658810325477,
+      "precision_pos": 1.0,
+      "fold": 1,
+      "train_time_sec": 25.18949303000045
+    },
+    {
+      "f1_macro": 0.14205772563186436,
+      "recall_neg": 0.45955056179775283,
+      "precision_pos": 1.0,
+      "fold": 2,
+      "train_time_sec": 23.67013253099867
+    },
+    {
+      "f1_macro": 0.28467207489305196,
+      "recall_neg": 0.0056179775280898875,
+      "precision_pos": 0.7286706349206349,
+      "fold": 3,
+      "train_time_sec": 21.550293321000936
+    }
+  ],
+  "mean_f1_macro": 0.18556837714753968,
+  "mean_recall_neg": 0.2265114734527968,
+  "mean_precision_pos": 0.9095568783068783
+}
