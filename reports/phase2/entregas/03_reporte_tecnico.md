@@ -101,7 +101,7 @@ El proyecto responde a tres casos de uso identificados en la Fase 1 del proyecto
 3. **Manejo de Desbalance de Clases**:
    - Implementar estrategias de pesos de clase ajustados
    - Evaluar callbacks (EarlyStopping, ReduceLROnPlateau) para convergencia estable
-   - Maximizar recall de clase minoritaria (negativa, 13%) sin sacrificar F1 global
+   - Maximizar recall de clase minoritaria (negativa, 14.7%) sin sacrificar F1 global
 
 4. **Eficiencia Computacional**:
    - Optimizar tiempos de entrenamiento mediante cuDNN
@@ -167,7 +167,7 @@ El proyecto responde a tres casos de uso identificados en la Fase 1 del proyecto
 
 **Nombre**: Big Andalusian Hotels Reviews (Big_AHR)  
 **Fuente**: Reseñas recopiladas de plataformas online (TripAdvisor, Booking.com, Google Reviews)  
-**Tamaño**: 112,408 reseñas  
+**Tamaño**: 18,172 reseñas  
 **Período**: 2015-2023  
 **Cobertura Geográfica**: Hoteles en las 8 provincias de Andalucía (Almería, Cádiz, Córdoba, Granada, Huelva, Jaén, Málaga, Sevilla)
 
@@ -191,26 +191,26 @@ El proyecto responde a tres casos de uso identificados en la Fase 1 del proyecto
 
 ![Distribución de Clases](../figuras/fig01_distribucion_clases.png)
 
-**Figura 2.1**: Distribución de clases en el dataset (N=112,408). El desbalance hacia la clase positiva (66%) requiere estrategias de ponderación.
+**Figura 2.1**: Distribución de clases en el dataset (N=18,172). El desbalance hacia la clase positiva (72.8%) requiere estrategias de ponderación.
 
 **Estadísticas de Distribución**:
 
 | Clase | Etiqueta | Frecuencia | Porcentaje |
 |-------|----------|------------|------------|
-| Negativo | 0 | 14,613 | 13.0% |
-| Neutral | 3 | 23,605 | 21.0% |
-| Positivo | 1 | 74,190 | 66.0% |
-| **Total** | - | **112,408** | **100.0%** |
+| Positivo | 1 | 13,227 | 72.8% |
+| Negativo | 0 | 2,671 | 14.7% |
+| Neutral | 3 | 2,274 | 12.5% |
+| **Total** | - | **18,172** | **100.0%** |
 
 **Análisis de Desbalance**:
 
-- **Ratio Positivo:Negativo**: 5.08:1 (desbalance severo)
-- **Ratio Positivo:Neutral**: 3.14:1 (desbalance moderado)
-- **Ratio Neutral:Negativo**: 1.62:1 (desbalance leve)
+- **Ratio Positivo:Negativo**: 4.95:1 (desbalance severo)
+- **Ratio Positivo:Neutral**: 5.82:1 (desbalance severo)
+- **Ratio Neutral:Negativo**: 0.85:1 (desbalance leve)
 
 **Implicaciones**:
 
-1. **Sesgo hacia Clase Mayoritaria**: Los modelos tienden a predecir la clase positiva por defecto para maximizar accuracy (baseline accuracy = 66%).
+1. **Sesgo hacia Clase Mayoritaria**: Los modelos tienden a predecir la clase positiva por defecto para maximizar accuracy (baseline accuracy = 72.8%).
 
 2. **Necesidad de Métricas Macro**: F1-macro (no ponderado) es más apropiado que accuracy o F1-weighted para evaluar desempeño equilibrado.
 
@@ -481,7 +481,7 @@ Muestra manual de 500 reseñas identificó 23 casos (4.6%) de sarcasmo/ironía:
 
 **Hallazgos Clave**:
 
-1. **Desbalance Severo**: 66% positivas, 21% neutrales, 13% negativas → requiere pesos de clase y métricas macro.
+1. **Desbalance Severo**: 72.8% positivas, 12.5% neutrales, 14.7% negativas → requiere pesos de clase y métricas macro.
 
 2. **Reseñas Negativas más Largas**: Mediana 165 tokens (negativo) vs 148 tokens (positivo) → justifica RNNs para capturar dependencias largas.
 
@@ -667,7 +667,7 @@ def clean_stem(text):
 - Pierde información semántica (ej: "hotel" y "hotelero" → mismo stem)
 - No lingüísticamente informado (solo reglas heurísticas)
 
-**Comparación de Tiempos** (procesamiento de 112,408 reseñas):
+**Comparación de Tiempos** (procesamiento de 18,172 reseñas):
 
 | Técnica | Tiempo Total | Tiempo/Reseña | Speedup |
 |---------|--------------|---------------|---------|
@@ -2874,7 +2874,7 @@ DeepLearningP2/
 ├── config/
 │   └── phase2.yaml                  # Configuración de hiperparámetros
 ├── data/
-│   └── Big_AHR.csv                  # Dataset (112,408 reseñas)
+│   └── Big_AHR.csv                  # Dataset (18,172 reseñas)
 ├── src/
 │   ├── data/
 │   │   └── dataset_loader.py        # Carga y preprocesamiento de datos

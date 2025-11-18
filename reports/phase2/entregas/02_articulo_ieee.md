@@ -12,7 +12,7 @@ Anderson J. Alvarado¹ · David E. Moreno²
 
 ## Abstract
 
-Este trabajo presenta un estudio sistemático de Redes Neuronales Recurrentes (RNN) para clasificación de sentimientos en 112,408 reseñas de hoteles andaluces. Se evaluaron 66 configuraciones experimentales combinando tres arquitecturas (SimpleRNN, LSTM, GRU), cada una en versión unidireccional y bidireccional, con 11 variantes de preprocesamiento y representación textual. Los resultados demuestran que la bidireccionalidad es crítica para el desempeño: modelos bidireccionales superan a unidireccionales por un factor de 3x en F1-macro (0.76 vs 0.25). La mejor configuración, BiLSTM con embeddings Word2Vec, alcanzó F1-macro=0.785, recall de clase negativa=0.823 y precisión de clase positiva=0.964, con tiempos de entrenamiento de 31 s/fold gracias a optimización cuDNN. Se identificó que preprocesamiento mínimo (baseline) es suficiente para modelos bidireccionales con embeddings densos, simplificando el pipeline de producción. Este estudio proporciona evidencia empírica robusta sobre diseño arquitectónico y preprocesamiento para clasificación de sentimientos en español, con aplicaciones directas en gestión de reputación hotelera.
+Este trabajo presenta un estudio sistemático de Redes Neuronales Recurrentes (RNN) para clasificación de sentimientos en 18,172 reseñas de hoteles andaluces. Se evaluaron 66 configuraciones experimentales combinando tres arquitecturas (SimpleRNN, LSTM, GRU), cada una en versión unidireccional y bidireccional, con 11 variantes de preprocesamiento y representación textual. Los resultados demuestran que la bidireccionalidad es crítica para el desempeño: modelos bidireccionales superan a unidireccionales por un factor de 3x en F1-macro (0.76 vs 0.25). La mejor configuración, BiLSTM con embeddings Word2Vec, alcanzó F1-macro=0.785, recall de clase negativa=0.823 y precisión de clase positiva=0.964, con tiempos de entrenamiento de 31 s/fold gracias a optimización cuDNN. Se identificó que preprocesamiento mínimo (baseline) es suficiente para modelos bidireccionales con embeddings densos, simplificando el pipeline de producción. Este estudio proporciona evidencia empírica robusta sobre diseño arquitectónico y preprocesamiento para clasificación de sentimientos en español, con aplicaciones directas en gestión de reputación hotelera.
 
 **Palabras clave**: Redes Neuronales Recurrentes, LSTM, GRU, Clasificación de Sentimientos, Análisis de Opiniones, Procesamiento de Lenguaje Natural, Turismo
 
@@ -30,9 +30,9 @@ El análisis automatizado de sentimientos en reseñas online es fundamental para
 
 ### 1.2 Desafíos del Dominio
 
-El dataset de 112,408 reseñas presenta características que lo hacen particularmente desafiante:
+El dataset de 18,172 reseñas presenta características que lo hacen particularmente desafiante:
 
-- **Desbalance severo**: 66% positivas, 21% neutrales, 13% negativas.
+- **Desbalance severo**: 72.8% positivas, 12.5% neutrales, 14.7% negativas.
 - **Variabilidad lingüística**: Español con variaciones dialectales andaluzas.
 - **Longitud heterogénea**: Rango de 1 a 2000+ tokens (promedio ~180).
 - **Sarcasmo y negación**: Construcciones que invierten polaridad ("No es malo" = positivo).
@@ -72,15 +72,15 @@ Trabajos en español se han centrado en Twitter [10] y reseñas de productos [11
 
 ### 3.1 Dataset
 
-**Fuente**: Big Andalusian Hotels Reviews (112,408 reseñas).
+**Fuente**: Big Andalusian Hotels Reviews (18,172 reseñas).
 
 ![Distribución de Clases](../figuras/fig01_distribucion_clases.png)
 
-**Figura 1**: Distribución de clases en el dataset. El desbalance hacia la clase positiva (66%) requiere estrategias de ponderación.
+**Figura 1**: Distribución de clases en el dataset. El desbalance hacia la clase positiva (72.8%) requiere estrategias de ponderación.
 
 **Características**:
 - **Etiquetas**: Negativo (0), Neutro (3), Positivo (1).
-- **Distribución**: 13% negativas, 21% neutrales, 66% positivas.
+- **Distribución**: 14.7% negativas, 12.5% neutrales, 72.8% positivas.
 - **Estadísticas textuales**:
   - Longitud promedio: 180 tokens (σ=95).
   - Vocabulario: ~45,000 palabras únicas.

@@ -10,7 +10,7 @@ Anderson J. Alvarado¹ · David E. Moreno²
 
 ## Contexto y Objetivos
 
-Este proyecto implementa modelos de Redes Neuronales Recurrentes (RNN) para clasificar automáticamente el sentimiento (negativo, neutro, positivo) en 112,408 reseñas de hoteles andaluces. El análisis responde a tres casos de uso empresariales:
+Este proyecto implementa modelos de Redes Neuronales Recurrentes (RNN) para clasificar automáticamente el sentimiento (negativo, neutro, positivo) en 18,172 reseñas de hoteles andaluces. El análisis responde a tres casos de uso empresariales:
 
 1. **Sistema de alertas** (Caso 1): Detectar reseñas negativas para respuesta inmediata.
 2. **Selección de testimonios** (Caso 2): Identificar reseñas positivas auténticas para marketing.
@@ -23,15 +23,15 @@ Este proyecto implementa modelos de Redes Neuronales Recurrentes (RNN) para clas
 
 ## Datos
 
-El dataset contiene **112,408 reseñas** de hoteles andaluces con una distribución de clases desbalanceada:
+El dataset contiene **18,172 reseñas** de hoteles andaluces con una distribución de clases desbalanceada:
 
 ![Distribución de Clases](../figuras/fig01_distribucion_clases.png)
 
-**Figura 0**: Distribución de clases en el dataset. El desbalance hacia la clase positiva (66%) requiere estrategias de ponderación.
+**Figura 0**: Distribución de clases en el dataset. El desbalance hacia la clase positiva (72.8%) requiere estrategias de ponderación.
 
-- **Clase Positiva (1)**: 74,308 reseñas (66.1%)
-- **Clase Neutra (3)**: 23,493 reseñas (20.9%)
-- **Clase Negativa (0)**: 14,607 reseñas (13.0%)
+- **Clase Positiva (1)**: 13,227 reseñas (72.8%)
+- **Clase Negativa (0)**: 2,671 reseñas (14.7%)
+- **Clase Neutra (3)**: 2,274 reseñas (12.5%)
 
 Este desbalance motivó el uso de pesos de clase (multiplicador 1.2 para clase negativa) y validación estratificada.
 
