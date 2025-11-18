@@ -189,7 +189,9 @@ El proyecto responde a tres casos de uso identificados en la Fase 1 del proyecto
 
 ### 2.2 Distribución de Clases
 
-![Distribución de Clases](figures/fig1_class_distribution.png)
+![Distribución de Clases](../figuras/fig01_distribucion_clases.png)
+
+**Figura 2.1**: Distribución de clases en el dataset (N=112,408). El desbalance hacia la clase positiva (66%) requiere estrategias de ponderación.
 
 **Estadísticas de Distribución**:
 
@@ -221,7 +223,9 @@ El proyecto responde a tres casos de uso identificados en la Fase 1 del proyecto
 
 ### 2.3 Análisis de Longitud de Texto
 
-![Distribución de Longitud](figures/fig2_length_distribution.png)
+![Distribución de Longitud](../figuras/fig02_longitud_resenas.png)
+
+**Figura 2.2**: Distribución de longitud de reseñas por clase de sentimiento. Las reseñas negativas son típicamente más largas y detalladas.
 
 **Estadísticas Descriptivas por Clase**:
 
@@ -978,6 +982,10 @@ PYTHONUNBUFFERED=1 PYTHONPATH=. python scripts/train_lstm.py \
 ### 4.1 Arquitectura General
 
 Todas las variantes de RNN siguen la misma estructura modular:
+
+![Arquitectura del Modelo](../figuras/fig09_arquitectura_modelo.png)
+
+**Figura 4.1**: Arquitectura completa de los modelos RNN. Se muestran las variantes unidireccionales y bidireccionales de SimpleRNN, LSTM y GRU.
 
 ```
 Input (secuencias de índices)
@@ -2091,6 +2099,10 @@ PYTHONUNBUFFERED=1 PYTHONPATH=. python scripts/train_lstm.py \
 | GRU | C06 | 0.241 | 0.372 | 0.490 | 18 | C06_GRU_20251117-104523 |
 | **GRU-BI** | **C05** | **0.768** | **0.848** | **0.961** | **28** | C05_GRU_BI_20251117-112834 |
 
+![Comparación F1-Macro](../figuras/fig03_comparacion_f1.png)
+
+**Figura 6.1**: Comparación de F1-macro por arquitectura. Los modelos bidireccionales superan consistentemente a sus contrapartes unidireccionales.
+
 **Observaciones Clave**:
 
 1. **Bidireccionalidad es Crítica**: Modelos bidireccionales superan a unidireccionales por un factor de **3× en F1-macro** (0.76 vs 0.25 promedio).
@@ -2129,6 +2141,10 @@ PYTHONUNBUFFERED=1 PYTHONPATH=. python scripts/train_lstm.py \
 | Recall_Neg | 0.38 | 0.82 | +116% |
 | Precision_Pos | 0.72 | 0.96 | +33% |
 | Accuracy | 0.68 | 0.82 | +21% |
+
+![Unidireccional vs Bidireccional](../figuras/fig04_unidireccional_vs_bidireccional.png)
+
+**Figura 6.2**: Comparación directa entre arquitecturas unidireccionales y bidireccionales. La bidireccionalidad mejora dramáticamente el rendimiento en todas las métricas.
 
 **Interpretación**:
 
@@ -2170,6 +2186,10 @@ class_weight_multipliers: {0: 1.2, 1: 1.0, 3: 1.0}
 | Épocas | 8 | 9 | 8 | **8.3** | **0.6** |
 
 **Matriz de Confusión Promedio** (normalizada por filas):
+
+![Matriz de Confusión](../figuras/fig06_matriz_confusion.png)
+
+**Figura 6.5**: Matriz de confusión del mejor modelo (BiLSTM C02), promedio de 3 folds. La diagonal dominante indica buena discriminación entre clases.
 
 ```
                 Predicho
@@ -2253,6 +2273,10 @@ Real  Neg      0.82   0.08   0.10
 3. **Preprocesamiento Agresivo Puede Eliminar Información Útil**:
    - "limpieza" (sustantivo) vs "limpio" (adjetivo) → mismo stem "limpi"
    - Pérdida de matiz semántico que podría ser útil
+
+![Impacto del Preprocesamiento](../figuras/fig07_impacto_preprocesamiento.png)
+
+**Figura 6.3**: Comparación del impacto de diferentes técnicas de preprocesamiento en F1-macro y recall de clase negativa.
 
 **Recomendación**:
 
@@ -2345,6 +2369,10 @@ Real  Neg      0.82   0.08   0.10
 
 **Conclusión**: Todos los modelos bidireccionales cumplen requisito de latencia <1 ms/reseña, viables para producción en tiempo real.
 
+![Análisis de Eficiencia](../figuras/fig05_analisis_eficiencia.png)
+
+**Figura 6.4**: Trade-off entre F1-macro y tiempo de entrenamiento. BiLSTM y BiGRU ofrecen el mejor balance desempeño/eficiencia.
+
 **Costo Computacional** (entrenamiento completo):
 
 | Modelo | Tiempo/Fold (s) | Folds | Combinaciones | Tiempo Total (h) |
@@ -2392,6 +2420,10 @@ Real  Neg      0.82   0.08   0.10
 **Implicación Práctica**: Con modelos bidireccionales y embeddings densos, **preprocesamiento mínimo (lowercase + strip) es óptimo**, simplificando pipeline de producción.
 
 #### 7.1.3 Optimización cuDNN es Esencial
+
+![Optimización cuDNN](../figuras/fig08_optimizacion_cudnn.png)
+
+**Figura 7.1**: Impacto dramático de la optimización cuDNN en tiempos de entrenamiento. La aceleración es de 28x para LSTM y 112x para BiLSTM.
 
 **Evidencia Empírica**:
 - Aceleración de **28-112×** (LSTM: 680s → 24s, BiLSTM: 3485s → 31s)

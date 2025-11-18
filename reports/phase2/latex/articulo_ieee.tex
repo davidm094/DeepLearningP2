@@ -72,7 +72,7 @@ Trabajos en español se han centrado en Twitter \cite{vilares2015} y reseñas de
 \textbf{Distribución de clases}: 13\% negativas (0), 21\% neutrales (3), 66\% positivas (1). La Fig. \ref{fig:class_dist} muestra el desbalance severo que motiva el uso de métricas macro y manejo de pesos de clase.
 
 \begin{figure}[htbp]
-\centerline{\includegraphics[width=0.48\textwidth]{../figures/fig1_class_distribution.pdf}}
+\centerline{\includegraphics[width=0.48\textwidth]{../figuras/fig01_distribucion_clases.pdf}}
 \caption{Distribución de clases en el dataset (N=112,408). El desbalance severo (66\% positivas vs 13\% negativas) requiere estrategias específicas de manejo.}
 \label{fig:class_dist}
 \end{figure}
@@ -80,7 +80,7 @@ Trabajos en español se han centrado en Twitter \cite{vilares2015} y reseñas de
 \textbf{Estadísticas textuales}: Longitud promedio 180 tokens ($\sigma$=95), vocabulario $\sim$45,000 palabras únicas. La Fig. \ref{fig:length_dist} muestra que las reseñas negativas tienden a ser más largas (mediana 195 tokens) que las positivas (mediana 165 tokens), sugiriendo mayor elaboración en críticas.
 
 \begin{figure}[htbp]
-\centerline{\includegraphics[width=0.48\textwidth]{../figures/fig2_length_distribution.pdf}}
+\centerline{\includegraphics[width=0.48\textwidth]{../figuras/fig02_longitud_resenas.pdf}}
 \caption{Distribución de longitud de reseñas por clase de sentimiento. Las reseñas negativas son típicamente más largas y detalladas.}
 \label{fig:length_dist}
 \end{figure}
@@ -116,7 +116,7 @@ Todas las variantes siguen la estructura: \texttt{Input} $\rightarrow$ \texttt{E
 \textbf{Optimización cuDNN}: Para LSTM/GRU, se fijó \texttt{dropout}=0 y \texttt{recurrent\_dropout}=0 dentro de la celda, trasladando regularización a dropout externo. Esto habilita el kernel cuDNN optimizado, reduciendo tiempos de 680s/fold a 24s/fold en LSTM (28×) y de 3485s/fold a 31s/fold en BiLSTM (112×), como se muestra en la Fig. \ref{fig:cudnn}.
 
 \begin{figure}[htbp]
-\centerline{\includegraphics[width=0.48\textwidth]{../figures/fig8_cudnn_optimization.pdf}}
+\centerline{\includegraphics[width=0.48\textwidth]{../figuras/fig08_optimizacion_cudnn.pdf}}
 \caption{Impacto de la optimización cuDNN en tiempos de entrenamiento y utilización de GPU. La aceleración de 28-112× permite experimentación rápida sin pérdida de desempeño.}
 \label{fig:cudnn}
 \end{figure}
@@ -167,7 +167,7 @@ GRU-BI & C05 & 0.768 & \textbf{0.848} & 0.961 & 28 \\
 La Fig. \ref{fig:f1_comparison} muestra la comparación de F1-macro entre todas las arquitecturas, evidenciando la superioridad de los modelos bidireccionales.
 
 \begin{figure}[htbp]
-\centerline{\includegraphics[width=0.48\textwidth]{../figures/fig3_f1_comparison.pdf}}
+\centerline{\includegraphics[width=0.48\textwidth]{../figuras/fig03_comparacion_f1.pdf}}
 \caption{Comparación de F1-macro por arquitectura. Los modelos bidireccionales (LSTM-BI, GRU-BI, SimpleRNN-BI) superan consistentemente a sus contrapartes unidireccionales.}
 \label{fig:f1_comparison}
 \end{figure}
@@ -195,7 +195,7 @@ GRU & 0.24 & 0.77 & +221\% & <0.001 \\
 La Fig. \ref{fig:uni_vs_bi} ilustra visualmente esta diferencia en tres métricas clave: F1-macro, recall\_neg y precision\_pos. El contexto bidireccional captura dependencias a largo plazo, mitiga gradientes desvanecientes con dos flujos de información, y genera representaciones más ricas (concatenación forward + backward).
 
 \begin{figure*}[htbp]
-\centerline{\includegraphics[width=\textwidth]{../figures/fig4_uni_vs_bi.pdf}}
+\centerline{\includegraphics[width=\textwidth]{../figuras/fig04_unidireccional_vs_bidireccional.pdf}}
 \caption{Comparación detallada de modelos unidireccionales vs bidireccionales en tres métricas clave. La bidireccionalidad mejora consistentemente el desempeño en todas las arquitecturas y métricas.}
 \label{fig:uni_vs_bi}
 \end{figure*}
@@ -207,7 +207,7 @@ La configuración óptima (Baseline + Word2Vec 128d + BiLSTM 64 unidades) alcanz
 La Fig. \ref{fig:confusion} muestra la matriz de confusión promedio de 3 folds. La clase negativa alcanza 82\% de recall (objetivo cumplido para alertas), la clase positiva 95\% de recall y 96\% de precisión (excelente para testimonios), y la clase neutral 68\% de recall (mayor confusión, pero menos crítica). La confusión principal es Neutral$\rightarrow$Positivo (27\%), atribuible a expresiones ambiguas.
 
 \begin{figure}[htbp]
-\centerline{\includegraphics[width=0.45\textwidth]{../figures/fig6_confusion_matrix.pdf}}
+\centerline{\includegraphics[width=0.45\textwidth]{../figuras/fig06_matriz_confusion.pdf}}
 \caption{Matriz de confusión del mejor modelo (BiLSTM C02), promedio de 3 folds. La diagonal dominante indica buena discriminación entre clases.}
 \label{fig:confusion}
 \end{figure}
@@ -217,7 +217,7 @@ La Fig. \ref{fig:confusion} muestra la matriz de confusión promedio de 3 folds.
 La Fig. \ref{fig:preprocessing} muestra el impacto de las técnicas de limpieza en BiLSTM. Contraintuitivamente, baseline (0.785) supera a lematización (0.782) y stemming (0.774) en F1-macro. Sin embargo, stemming maximiza recall\_neg (0.857), útil si se prioriza detección de negativos.
 
 \begin{figure}[htbp]
-\centerline{\includegraphics[width=0.48\textwidth]{../figures/fig7_preprocessing_impact.pdf}}
+\centerline{\includegraphics[width=0.48\textwidth]{../figuras/fig07_impacto_preprocesamiento.pdf}}
 \caption{Impacto del preprocesamiento en BiLSTM. Baseline ofrece mejor balance F1/eficiencia, mientras stemming maximiza recall de clase negativa.}
 \label{fig:preprocessing}
 \end{figure}
@@ -229,7 +229,7 @@ Este hallazgo contrasta con literatura previa \cite{joshi2016} que reporta mejor
 La Fig. \ref{fig:efficiency} muestra el trade-off entre F1-macro y tiempo de entrenamiento. BiLSTM (C02) ofrece el mejor F1 (0.785) con tiempo competitivo (31 s/fold). BiGRU (C05) es 10\% más rápido (28 s/fold) con F1 ligeramente inferior (0.768), ideal para producción con restricciones de latencia. Los modelos unidireccionales son más rápidos pero no viables por bajo F1 (<0.32).
 
 \begin{figure}[htbp]
-\centerline{\includegraphics[width=0.48\textwidth]{../figures/fig5_efficiency.pdf}}
+\centerline{\includegraphics[width=0.48\textwidth]{../figuras/fig05_analisis_eficiencia.pdf}}
 \caption{Trade-off entre F1-macro y tiempo de entrenamiento. BiLSTM y BiGRU ofrecen el mejor balance desempeño/eficiencia.}
 \label{fig:efficiency}
 \end{figure}

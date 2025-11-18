@@ -74,6 +74,10 @@ Trabajos en español se han centrado en Twitter [10] y reseñas de productos [11
 
 **Fuente**: Big Andalusian Hotels Reviews (112,408 reseñas).
 
+![Distribución de Clases](../figuras/fig01_distribucion_clases.png)
+
+**Figura 1**: Distribución de clases en el dataset. El desbalance hacia la clase positiva (66%) requiere estrategias de ponderación.
+
 **Características**:
 - **Etiquetas**: Negativo (0), Neutro (3), Positivo (1).
 - **Distribución**: 13% negativas, 21% neutrales, 66% positivas.
@@ -207,6 +211,10 @@ Input → Embedding → RNN → Dropout → Dense(3, softmax)
 | GRU | C06 | 0.241 | 0.372 | 0.490 | 18 |
 | GRU-BI | C05 | 0.768 | 0.848 | 0.961 | 28 |
 
+![Comparación F1-Macro](../figuras/fig03_comparacion_f1.png)
+
+**Figura 2**: Comparación de F1-macro por arquitectura. Los modelos bidireccionales superan consistentemente a sus contrapartes unidireccionales.
+
 **Hallazgos principales**:
 1. Bidireccionalidad aumenta F1-macro de 0.25 a 0.76 (+204%).
 2. BiLSTM (C02) alcanza mejor balance global.
@@ -222,6 +230,10 @@ Input → Embedding → RNN → Dropout → Dense(3, softmax)
 | SimpleRNN | 0.25 | 0.75 | +200% | 0.26 | 0.81 | +212% |
 | LSTM | 0.24 | 0.78 | +225% | 0.37 | 0.82 | +122% |
 | GRU | 0.24 | 0.77 | +221% | 0.37 | 0.82 | +122% |
+
+![Unidireccional vs Bidireccional](../figuras/fig04_unidireccional_vs_bidireccional.png)
+
+**Figura 3**: Comparación directa entre arquitecturas unidireccionales y bidireccionales. La bidireccionalidad mejora dramáticamente el rendimiento en todas las métricas.
 
 **Análisis estadístico**:
 - Diferencias significativas (p<0.001, t-test pareado).
@@ -281,6 +293,10 @@ Real  Neg    [82%   8%   10%]
 
 ### 4.5 Impacto del Preprocesamiento
 
+![Impacto del Preprocesamiento](../figuras/fig07_impacto_preprocesamiento.png)
+
+**Figura 5**: Comparación del impacto de diferentes técnicas de preprocesamiento en F1-macro y recall de clase negativa.
+
 **Tabla 5**: Comparación de técnicas de limpieza (BiLSTM).
 
 | Limpieza | Mejor F1 | Mejor Recall Neg | Tiempo prep. | Vocab. size |
@@ -315,6 +331,10 @@ Real  Neg    [82%   8%   10%]
 **Explicación**: Inicialización informada con relaciones semánticas preaprendidas.
 
 ### 4.7 Optimización cuDNN
+
+![Optimización cuDNN](../figuras/fig08_optimizacion_cudnn.png)
+
+**Figura 4**: Impacto dramático de la optimización cuDNN en tiempos de entrenamiento. La aceleración es de 28x para LSTM y 112x para BiLSTM.
 
 **Problema inicial**: LSTM con dropout interno tardaba ~680 s/fold con 30% utilización GPU.
 

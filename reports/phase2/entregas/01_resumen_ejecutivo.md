@@ -21,6 +21,22 @@ Este proyecto implementa modelos de Redes Neuronales Recurrentes (RNN) para clas
 
 ---
 
+## Datos
+
+El dataset contiene **112,408 reseñas** de hoteles andaluces con una distribución de clases desbalanceada:
+
+![Distribución de Clases](../figuras/fig01_distribucion_clases.png)
+
+**Figura 0**: Distribución de clases en el dataset. El desbalance hacia la clase positiva (66%) requiere estrategias de ponderación.
+
+- **Clase Positiva (1)**: 74,308 reseñas (66.1%)
+- **Clase Neutra (3)**: 23,493 reseñas (20.9%)
+- **Clase Negativa (0)**: 14,607 reseñas (13.0%)
+
+Este desbalance motivó el uso de pesos de clase (multiplicador 1.2 para clase negativa) y validación estratificada.
+
+---
+
 ## Metodología
 
 ### Diseño Experimental
@@ -37,6 +53,10 @@ Se evaluaron **66 configuraciones** combinando:
 **Total**: 198 entrenamientos (66 experimentos × 3 folds estratificados).
 
 ### Arquitectura de Modelos
+
+![Arquitectura del Modelo](../figuras/fig09_arquitectura_modelo.png)
+
+**Figura A**: Arquitectura completa de los modelos RNN evaluados.
 
 ```
 Input (secuencias tokenizadas)
@@ -93,6 +113,10 @@ Real  Neg    [82%   8%   10%]
 
 ### Comparación de Arquitecturas
 
+![Comparación F1-Macro por Modelo](../figuras/fig03_comparacion_f1.png)
+
+**Figura 1**: Comparación de F1-macro por arquitectura. Los modelos bidireccionales superan consistentemente a sus contrapartes unidireccionales.
+
 | Modelo | Mejor Config | F1-macro | Recall Neg | Precision Pos | Tiempo (s/fold) |
 |--------|--------------|----------|------------|---------------|-----------------|
 | SimpleRNN | C03 (lemma) | 0.289 | 0.246 | 0.742 | 23 |
@@ -101,6 +125,10 @@ Real  Neg    [82%   8%   10%]
 | **LSTM-BI** | **C02 (word2vec)** | **0.785** | **0.823** | **0.964** | **31** |
 | GRU | C06 (stem+w2v) | 0.241 | 0.372 | 0.490 | 18 |
 | **GRU-BI** | C05 (stem) | 0.768 | **0.848** | 0.961 | 28 |
+
+![Unidireccional vs Bidireccional](../figuras/fig04_unidireccional_vs_bidireccional.png)
+
+**Figura 2**: Comparación directa entre arquitecturas unidireccionales y bidireccionales. La bidireccionalidad mejora dramáticamente el rendimiento.
 
 **Hallazgos clave**:
 1. **Bidireccionalidad es crítica**: Modelos bidireccionales superan a unidireccionales por **+204% en F1-macro** (0.76 vs 0.25).
@@ -132,6 +160,10 @@ Real  Neg    [82%   8%   10%]
 **Conclusión**: Word2Vec preentrenado sobre el corpus ofrece ventaja marginal pero consistente.
 
 ### 3. Optimización cuDNN
+
+![Optimización cuDNN](../figuras/fig08_optimizacion_cudnn.png)
+
+**Figura 3**: Impacto dramático de la optimización cuDNN en tiempos de entrenamiento.
 
 **Problema inicial**: LSTM con dropout interno tardaba ~680 s/fold con 30% de utilización GPU.
 
