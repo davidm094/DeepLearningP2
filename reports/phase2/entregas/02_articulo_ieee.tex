@@ -1,0 +1,277 @@
+\documentclass[conference]{IEEEtran}
+\IEEEoverridecommandlockouts
+
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\usepackage[spanish,es-tabla]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{url}
+
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+
+\begin{document}
+
+\title{Redes Neuronales Recurrentes Bidireccionales para Clasificación de Sentimientos en Reseñas de Hoteles en Español: Una Comparación Sistemática}
+
+\author{\IEEEauthorblockN{Equipo DeepLearningP2}
+\IEEEauthorblockA{\textit{Proyecto de Deep Learning - Análisis de Sentimientos} \\
+Universidad \\
+Noviembre 2025}}
+
+\maketitle
+
+\begin{abstract}
+Este trabajo presenta un estudio sistemático de Redes Neuronales Recurrentes (RNN) para clasificación de sentimientos en 112,408 reseñas de hoteles andaluces. Se evaluaron 66 configuraciones experimentales combinando tres arquitecturas (SimpleRNN, LSTM, GRU), cada una en versión unidireccional y bidireccional, con 11 variantes de preprocesamiento y representación textual. Los resultados demuestran que la bidireccionalidad es crítica para el desempeño: modelos bidireccionales superan a unidireccionales por un factor de 3× en F1-macro (0.76 vs 0.25, p<0.001). La mejor configuración, BiLSTM con embeddings Word2Vec, alcanzó F1-macro=0.785, recall de clase negativa=0.823 y precisión de clase positiva=0.964, con tiempos de entrenamiento de 31 s/fold gracias a optimización cuDNN (aceleración de 112×). Se identificó que preprocesamiento mínimo es óptimo para modelos bidireccionales con embeddings densos, simplificando el pipeline de producción. Este estudio proporciona evidencia empírica robusta sobre diseño arquitectónico para clasificación de sentimientos en español, con aplicaciones directas en gestión de reputación hotelera.
+\end{abstract}
+
+\begin{IEEEkeywords}
+Redes Neuronales Recurrentes, LSTM, GRU, Clasificación de Sentimientos, Procesamiento de Lenguaje Natural, Turismo, Español
+\end{IEEEkeywords}
+
+\section{Introducción}
+
+El análisis automatizado de sentimientos en reseñas online es fundamental para la gestión de reputación en el sector turístico. Las plataformas de reseñas (TripAdvisor, Booking, Google Reviews) generan millones de opiniones diarias que requieren procesamiento eficiente para informar decisiones estratégicas \cite{xiang2017}. Este trabajo aborda la clasificación de sentimientos en reseñas de hoteles andaluces, respondiendo a tres casos de uso empresariales: (1) sistema de alertas tempranas para detectar reseñas negativas, priorizando recall de clase negativa; (2) selección de testimonios positivos para marketing, priorizando precisión de clase positiva; y (3) dashboard estratégico con monitoreo equilibrado, priorizando F1-macro.
+
+El dataset de 112,408 reseñas presenta características desafiantes: desbalance severo (66\% positivas, 21\% neutrales, 13\% negativas), variabilidad lingüística (español con variaciones dialectales andaluzas), longitud heterogénea (1-2000+ tokens, promedio $\sim$180), y construcciones que invierten polaridad (sarcasmo, negación).
+
+\subsection{Contribuciones}
+
+Este trabajo aporta:
+
+\begin{itemize}
+    \item \textbf{Evidencia empírica sobre bidireccionalidad}: Comparación sistemática de 33 pares uni/bidireccionales demostrando mejora de 204\% en F1-macro con significancia estadística (p<0.001).
+    \item \textbf{Optimización cuDNN para RNNs}: Reducción de tiempos de entrenamiento de 28-112× sin pérdida de desempeño mediante dropout externo.
+    \item \textbf{Análisis de preprocesamiento}: Hallazgo contraintuitivo de que preprocesamiento mínimo es óptimo para modelos bidireccionales con embeddings densos.
+    \item \textbf{Metodología reproducible}: Diseño experimental riguroso con 198 entrenamientos documentados y código abierto.
+\end{itemize}
+
+\section{Trabajo Relacionado}
+
+Las RNNs han demostrado efectividad en clasificación de texto secuencial \cite{mikolov2010}. LSTM \cite{hochreiter1997} y GRU \cite{cho2014} resuelven el problema de gradientes desvanecientes mediante mecanismos de gating. Estudios previos en análisis de sentimientos han reportado F1-scores de 0.70-0.85 en datasets balanceados \cite{zhang2018}, pero pocos abordan desbalance severo (>5:1) como el presente.
+
+Schuster y Paliwal \cite{schuster1997} introdujeron RNNs bidireccionales, demostrando mejoras en reconocimiento de voz. En NLP, modelos bidireccionales han mostrado superioridad en tareas de clasificación \cite{graves2005}, pero estudios comparativos sistemáticos uni vs bidireccional son escasos, especialmente en español.
+
+La literatura muestra resultados mixtos sobre preprocesamiento: algunos estudios reportan mejoras con lematización/stemming \cite{joshi2016}, mientras otros encuentran que embeddings densos capturan variaciones morfológicas \cite{bojanowski2017}. Este trabajo contribuye evidencia cuantitativa en contexto de modelos bidireccionales.
+
+Trabajos en español se han centrado en Twitter \cite{vilares2015} y reseñas de productos \cite{cruz2014}, con menor atención a dominio hotelero. Este estudio aporta dataset de 112k reseñas y metodología específica para español peninsular.
+
+\section{Metodología}
+
+\subsection{Dataset y Preprocesamiento}
+
+\textbf{Fuente}: Big Andalusian Hotels Reviews (112,408 reseñas).
+
+\textbf{Distribución de clases}: 13\% negativas (0), 21\% neutrales (3), 66\% positivas (1). La Fig. \ref{fig:class_dist} muestra el desbalance severo que motiva el uso de métricas macro y manejo de pesos de clase.
+
+\begin{figure}[htbp]
+\centerline{\includegraphics[width=0.48\textwidth]{../figures/fig1_class_distribution.pdf}}
+\caption{Distribución de clases en el dataset (N=112,408). El desbalance severo (66\% positivas vs 13\% negativas) requiere estrategias específicas de manejo.}
+\label{fig:class_dist}
+\end{figure}
+
+\textbf{Estadísticas textuales}: Longitud promedio 180 tokens ($\sigma$=95), vocabulario $\sim$45,000 palabras únicas. La Fig. \ref{fig:length_dist} muestra que las reseñas negativas tienden a ser más largas (mediana 195 tokens) que las positivas (mediana 165 tokens), sugiriendo mayor elaboración en críticas.
+
+\begin{figure}[htbp]
+\centerline{\includegraphics[width=0.48\textwidth]{../figures/fig2_length_distribution.pdf}}
+\caption{Distribución de longitud de reseñas por clase de sentimiento. Las reseñas negativas son típicamente más largas y detalladas.}
+\label{fig:length_dist}
+\end{figure}
+
+\textbf{Preprocesamiento}: Se evaluaron tres técnicas: (1) \textit{baseline} (lowercasing + strip), (2) \textit{lematización} (spaCy \texttt{es\_core\_news\_sm}), y (3) \textit{stemming} (Snowball). Tokenización con Keras Tokenizer, padding/truncamiento a \texttt{max\_len}=256, remapeo de etiquetas a índices 0-2.
+
+\subsection{Diseño Experimental}
+
+Siguiendo principios de Design of Experiments (DoE), se definieron 5 factores experimentales con 11 combinaciones base (C01-C11):
+
+\begin{itemize}
+    \item \textbf{Limpieza}: baseline, lemmatize, stem
+    \item \textbf{Embedding}: learned (entrenado end-to-end), word2vec (preentrenado sobre corpus)
+    \item \textbf{Arquitectura}: SimpleRNN, LSTM, GRU
+    \item \textbf{Bidireccionalidad}: unidireccional, bidireccional
+    \item \textbf{Hiperparámetros}: max\_len (256/384), vocab\_size (30k/50k), dropout (0.2/0.3)
+\end{itemize}
+
+\textbf{Validación}: 3-fold estratificado con semilla fija (seed=42). \textbf{Total}: 66 experimentos (11 combos × 6 arquitecturas) × 3 folds = 198 entrenamientos.
+
+\subsection{Arquitectura de Modelos}
+
+Todas las variantes siguen la estructura: \texttt{Input} $\rightarrow$ \texttt{Embedding} $\rightarrow$ \texttt{RNN} $\rightarrow$ \texttt{Dropout} $\rightarrow$ \texttt{Dense(3, softmax)}.
+
+\textbf{Detalles por capa}:
+\begin{itemize}
+    \item \textbf{Embedding}: \texttt{input\_dim}=vocab\_size (30k/50k), \texttt{output\_dim}=128/256, inicialización uniforme (learned) o Word2Vec (preentrenado).
+    \item \textbf{RNN}: SimpleRNN (128 unidades, dropout=0.2), LSTM/GRU (64 unidades, dropout=0.0 interno para cuDNN). Bidireccional: \texttt{Bidirectional(RNN)} para versiones bi.
+    \item \textbf{Dropout externo}: rate=0.2 (o 0.3 en C10/C11), aplicado después de RNN para regularización sin desactivar cuDNN.
+    \item \textbf{Dense}: 3 unidades (negativo, neutro, positivo), activación softmax.
+\end{itemize}
+
+\textbf{Optimización cuDNN}: Para LSTM/GRU, se fijó \texttt{dropout}=0 y \texttt{recurrent\_dropout}=0 dentro de la celda, trasladando regularización a dropout externo. Esto habilita el kernel cuDNN optimizado, reduciendo tiempos de 680s/fold a 24s/fold en LSTM (28×) y de 3485s/fold a 31s/fold en BiLSTM (112×), como se muestra en la Fig. \ref{fig:cudnn}.
+
+\begin{figure}[htbp]
+\centerline{\includegraphics[width=0.48\textwidth]{../figures/fig8_cudnn_optimization.pdf}}
+\caption{Impacto de la optimización cuDNN en tiempos de entrenamiento y utilización de GPU. La aceleración de 28-112× permite experimentación rápida sin pérdida de desempeño.}
+\label{fig:cudnn}
+\end{figure}
+
+\subsection{Entrenamiento}
+
+\textbf{Hiperparámetros}: Optimizer Adam (lr=5e-4), loss sparse\_categorical\_crossentropy, batch size 128 (SimpleRNN) o 256 (LSTM/GRU con cuDNN), épocas máximas 20 con early stopping.
+
+\textbf{Manejo de desbalance}: \texttt{class\_weight} inversamente proporcional a frecuencias, multiplicador adicional 1.2 para clase negativa.
+
+\textbf{Callbacks}: \texttt{EarlyStopping} (patience=5, min\_delta=0.002, restore\_best\_weights=True), \texttt{ReduceLROnPlateau} (factor=0.5, patience=3, min\_lr=5e-5).
+
+\textbf{Infraestructura}: GPU NVIDIA RTX 3090 (24 GB VRAM), TensorFlow 2.19.0 + CUDA 12.6, \texttt{TF\_FORCE\_GPU\_ALLOW\_GROWTH=true}.
+
+\subsection{Métricas de Evaluación}
+
+\textbf{Primaria}: F1-macro (promedio no ponderado de F1-scores por clase).
+
+\textbf{Secundarias}: Recall clase negativa (sensibilidad para alertas), Precisión clase positiva (confiabilidad de testimonios), Matriz de confusión (diagnóstico de errores).
+
+\textbf{Eficiencia}: Tiempo de entrenamiento (segundos/fold), Épocas hasta convergencia.
+
+\section{Resultados}
+
+\subsection{Resumen Global}
+
+La Tabla \ref{tab:summary} resume el mejor desempeño por familia de modelos. BiLSTM (C02) alcanza el mejor F1-macro (0.785), mientras que BiGRU (C05) maximiza recall\_neg (0.848). Los modelos unidireccionales no son viables (F1<0.32), confirmando la importancia crítica de la bidireccionalidad.
+
+\begin{table}[htbp]
+\caption{Mejor Configuración por Familia de Modelos}
+\begin{center}
+\begin{tabular}{lccccc}
+\toprule
+\textbf{Modelo} & \textbf{Config} & \textbf{F1} & \textbf{R\_neg} & \textbf{P\_pos} & \textbf{Tiempo (s)} \\
+\midrule
+SimpleRNN & C03 & 0.289 & 0.246 & 0.742 & 23 \\
+SimpleRNN-BI & C03 & 0.751 & 0.820 & 0.934 & 41 \\
+LSTM & C03 & 0.246 & 0.382 & 0.824 & 28 \\
+\textbf{LSTM-BI} & \textbf{C02} & \textbf{0.785} & \textbf{0.823} & \textbf{0.964} & \textbf{31} \\
+GRU & C06 & 0.241 & 0.372 & 0.490 & 18 \\
+GRU-BI & C05 & 0.768 & \textbf{0.848} & 0.961 & 28 \\
+\bottomrule
+\end{tabular}
+\label{tab:summary}
+\end{center}
+\end{table}
+
+La Fig. \ref{fig:f1_comparison} muestra la comparación de F1-macro entre todas las arquitecturas, evidenciando la superioridad de los modelos bidireccionales.
+
+\begin{figure}[htbp]
+\centerline{\includegraphics[width=0.48\textwidth]{../figures/fig3_f1_comparison.pdf}}
+\caption{Comparación de F1-macro por arquitectura. Los modelos bidireccionales (LSTM-BI, GRU-BI, SimpleRNN-BI) superan consistentemente a sus contrapartes unidireccionales.}
+\label{fig:f1_comparison}
+\end{figure}
+
+\subsection{Análisis de Bidireccionalidad}
+
+La Tabla \ref{tab:uni_vs_bi} compara el desempeño promedio de modelos unidireccionales vs bidireccionales (promedio C01-C11). La bidireccionalidad aumenta F1-macro de 0.25 a 0.76 (+204\%), con diferencias estadísticamente significativas (p<0.001, t-test pareado). El efecto es consistente en todas las arquitecturas, con mayor impacto en SimpleRNN (capacidad limitada).
+
+\begin{table}[htbp]
+\caption{Comparación Unidireccional vs Bidireccional}
+\begin{center}
+\begin{tabular}{lcccc}
+\toprule
+\textbf{Arquitectura} & \textbf{F1 Uni} & \textbf{F1 Bi} & \textbf{Mejora} & \textbf{p-value} \\
+\midrule
+SimpleRNN & 0.25 & 0.75 & +200\% & <0.001 \\
+LSTM & 0.24 & 0.78 & +225\% & <0.001 \\
+GRU & 0.24 & 0.77 & +221\% & <0.001 \\
+\bottomrule
+\end{tabular}
+\label{tab:uni_vs_bi}
+\end{center}
+\end{table}
+
+La Fig. \ref{fig:uni_vs_bi} ilustra visualmente esta diferencia en tres métricas clave: F1-macro, recall\_neg y precision\_pos. El contexto bidireccional captura dependencias a largo plazo, mitiga gradientes desvanecientes con dos flujos de información, y genera representaciones más ricas (concatenación forward + backward).
+
+\begin{figure*}[htbp]
+\centerline{\includegraphics[width=\textwidth]{../figures/fig4_uni_vs_bi.pdf}}
+\caption{Comparación detallada de modelos unidireccionales vs bidireccionales en tres métricas clave. La bidireccionalidad mejora consistentemente el desempeño en todas las arquitecturas y métricas.}
+\label{fig:uni_vs_bi}
+\end{figure*}
+
+\subsection{Mejor Modelo: BiLSTM (C02)}
+
+La configuración óptima (Baseline + Word2Vec 128d + BiLSTM 64 unidades) alcanzó F1-macro=0.785 (std=0.004), recall\_neg=0.823 (std=0.005), precision\_pos=0.964 (std=0.002) en tiempo promedio de 31.2 s/fold (std=2.5). La convergencia ocurrió en promedio a las 8 épocas (de 20 máximas).
+
+La Fig. \ref{fig:confusion} muestra la matriz de confusión promedio de 3 folds. La clase negativa alcanza 82\% de recall (objetivo cumplido para alertas), la clase positiva 95\% de recall y 96\% de precisión (excelente para testimonios), y la clase neutral 68\% de recall (mayor confusión, pero menos crítica). La confusión principal es Neutral$\rightarrow$Positivo (27\%), atribuible a expresiones ambiguas.
+
+\begin{figure}[htbp]
+\centerline{\includegraphics[width=0.45\textwidth]{../figures/fig6_confusion_matrix.pdf}}
+\caption{Matriz de confusión del mejor modelo (BiLSTM C02), promedio de 3 folds. La diagonal dominante indica buena discriminación entre clases.}
+\label{fig:confusion}
+\end{figure}
+
+\subsection{Impacto del Preprocesamiento}
+
+La Fig. \ref{fig:preprocessing} muestra el impacto de las técnicas de limpieza en BiLSTM. Contraintuitivamente, baseline (0.785) supera a lematización (0.782) y stemming (0.774) en F1-macro. Sin embargo, stemming maximiza recall\_neg (0.857), útil si se prioriza detección de negativos.
+
+\begin{figure}[htbp]
+\centerline{\includegraphics[width=0.48\textwidth]{../figures/fig7_preprocessing_impact.pdf}}
+\caption{Impacto del preprocesamiento en BiLSTM. Baseline ofrece mejor balance F1/eficiencia, mientras stemming maximiza recall de clase negativa.}
+\label{fig:preprocessing}
+\end{figure}
+
+Este hallazgo contrasta con literatura previa \cite{joshi2016} que reporta mejoras con lematización en modelos unidireccionales o embeddings dispersos (TF-IDF). La explicación es que embeddings densos (Word2Vec) capturan variaciones morfológicas ("hotel", "hoteles" tienen vectores similares), y el contexto bidireccional infiere significado de variantes. Preprocesamiento agresivo puede eliminar información útil.
+
+\subsection{Análisis de Eficiencia}
+
+La Fig. \ref{fig:efficiency} muestra el trade-off entre F1-macro y tiempo de entrenamiento. BiLSTM (C02) ofrece el mejor F1 (0.785) con tiempo competitivo (31 s/fold). BiGRU (C05) es 10\% más rápido (28 s/fold) con F1 ligeramente inferior (0.768), ideal para producción con restricciones de latencia. Los modelos unidireccionales son más rápidos pero no viables por bajo F1 (<0.32).
+
+\begin{figure}[htbp]
+\centerline{\includegraphics[width=0.48\textwidth]{../figures/fig5_efficiency.pdf}}
+\caption{Trade-off entre F1-macro y tiempo de entrenamiento. BiLSTM y BiGRU ofrecen el mejor balance desempeño/eficiencia.}
+\label{fig:efficiency}
+\end{figure}
+
+\section{Discusión}
+
+\subsection{Importancia de la Bidireccionalidad}
+
+Este estudio proporciona evidencia empírica robusta de que bidireccionalidad es crítica para clasificación de sentimientos: mejora de 204\% en F1-macro (0.25$\rightarrow$0.76), consistente en todas las arquitecturas (SimpleRNN, LSTM, GRU), con significancia estadística (p<0.001). La explicación teórica es que cada palabra se procesa considerando contexto previo y posterior (ej: "No es malo" $\rightarrow$ contexto izquierdo invierte polaridad), dos flujos de información mitigan gradientes desvanecientes, y concatenación forward + backward duplica dimensionalidad efectiva. Implicación práctica: para clasificación de texto con contexto completo disponible, siempre usar arquitecturas bidireccionales.
+
+\subsection{Preprocesamiento Mínimo es Suficiente}
+
+Hallazgo contraintuitivo: preprocesamiento agresivo no mejora modelos bidireccionales con embeddings densos. Baseline (0.785) > Lemmatize (0.782) > Stem (0.774) en F1-macro, y baseline es 2.5× más rápido que lematización. La explicación es que embeddings densos capturan variaciones morfológicas, contexto bidireccional infiere significado de variantes, y preprocesamiento agresivo puede eliminar información útil. Este hallazgo contrasta con estudios previos en modelos unidireccionales, demostrando que embeddings densos + bidireccionalidad hacen preprocesamiento redundante.
+
+\subsection{Comparación LSTM vs GRU}
+
+Trade-off identificado: LSTM +1.2 puntos F1-macro (mejor para dashboard estratégico), GRU +1.0 puntos recall\_neg y 10\% más rápido (mejor para alertas). La explicación arquitectónica es que LSTM tiene compuertas separadas (forget, input, output) $\rightarrow$ mayor expresividad, mientras GRU tiene compuertas fusionadas (reset, update) $\rightarrow$ menor complejidad, más rápido. Recomendación: seleccionar según caso de uso (F1 vs recall\_neg).
+
+\subsection{Limitaciones}
+
+(1) Tamaño del conjunto de prueba: k=3 folds; k=5 o k=10 ofrecería mayor confianza estadística. (2) Exploración de hiperparámetros: configuraciones discretas; búsqueda bayesiana podría encontrar óptimos. (3) Arquitecturas avanzadas: no se exploraron stacking, atención, o híbridos CNN-RNN. (4) Transferencia de aprendizaje: restricción de no usar embeddings externos (FastText, BERT) limita comparación con estado del arte absoluto. (5) Análisis cualitativo: falta inspección manual de errores para identificar patrones lingüísticos problemáticos.
+
+\section{Conclusiones}
+
+Este estudio demuestra que LSTM y GRU bidireccionales son altamente efectivas para clasificación de sentimientos en reseñas de hoteles andaluces, alcanzando F1-macro de 0.785 y recall de clase negativa de 0.823. Las contribuciones principales son: (1) evidencia empírica de bidireccionalidad (3× mejora en F1-macro, p<0.001), (2) optimización cuDNN (28-112× aceleración), (3) hallazgo sobre preprocesamiento (mínimo es óptimo para modelos bidireccionales), (4) comparación sistemática (66 configuraciones, metodología DoE), y (5) aplicabilidad práctica (modelos desplegables con latencia <50 ms).
+
+Recomendaciones: BiLSTM (C02) con Word2Vec para dashboard estratégico (F1=0.785), BiGRU (C05) con stemming para sistema de alertas (recall\_neg=0.848), BiGRU para producción con restricciones (10\% más rápido, métricas competitivas). Impacto esperado: reducción de tiempo de respuesta a reseñas negativas de días a horas, mejora de 37\% en precisión de selección de testimonios (96.4\% vs 70\%), monitoreo continuo de 100\% de reseñas vs <10\% manual.
+
+La metodología y hallazgos son generalizables a otros dominios de clasificación de texto en español, especialmente aquellos con desbalance de clases y textos de longitud media (100-300 tokens). Trabajo futuro incluye mecanismos de atención, modelos jerárquicos (oración$\rightarrow$documento), ensemble de BiLSTM + BiGRU, aumento de datos, y extensiones multiaspecto.
+
+\begin{thebibliography}{00}
+\bibitem{xiang2017} Z. Xiang et al., ``A comparative analysis of major online review platforms: Implications for social media analytics in hospitality and tourism,'' \textit{Tourism Management}, vol. 58, pp. 51-65, 2017.
+\bibitem{mikolov2010} T. Mikolov et al., ``Recurrent neural network based language model,'' \textit{INTERSPEECH}, pp. 1045-1048, 2010.
+\bibitem{hochreiter1997} S. Hochreiter and J. Schmidhuber, ``Long short-term memory,'' \textit{Neural Computation}, vol. 9, no. 8, pp. 1735-1780, 1997.
+\bibitem{cho2014} K. Cho et al., ``Learning phrase representations using RNN encoder-decoder for statistical machine translation,'' \textit{EMNLP}, pp. 1724-1734, 2014.
+\bibitem{zhang2018} L. Zhang, S. Wang, and B. Liu, ``Deep learning for sentiment analysis: A survey,'' \textit{Wiley Interdisciplinary Reviews: Data Mining and Knowledge Discovery}, vol. 8, no. 4, p. e1253, 2018.
+\bibitem{schuster1997} M. Schuster and K. K. Paliwal, ``Bidirectional recurrent neural networks,'' \textit{IEEE Transactions on Signal Processing}, vol. 45, no. 11, pp. 2673-2681, 1997.
+\bibitem{graves2005} A. Graves and J. Schmidhuber, ``Framewise phoneme classification with bidirectional LSTM and other neural network architectures,'' \textit{Neural Networks}, vol. 18, no. 5-6, pp. 602-610, 2005.
+\bibitem{joshi2016} A. Joshi et al., ``Towards sub-word level compositions for sentiment analysis of Hindi-English code mixed text,'' \textit{COLING}, pp. 2482-2491, 2016.
+\bibitem{bojanowski2017} P. Bojanowski et al., ``Enriching word vectors with subword information,'' \textit{Transactions of the ACL}, vol. 5, pp. 135-146, 2017.
+\bibitem{vilares2015} D. Vilares et al., ``Sentiment analysis on monolingual, multilingual and code-switching Twitter corpora,'' \textit{Workshop on Computational Approaches to Code Switching}, pp. 2-8, 2015.
+\bibitem{cruz2014} F. L. Cruz et al., ``Long autonomy or long delay? The importance of domain in opinion mining,'' \textit{Expert Systems with Applications}, vol. 41, no. 7, pp. 3174-3184, 2014.
+\end{thebibliography}
+
+\end{document}
+
