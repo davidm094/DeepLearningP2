@@ -1481,24 +1481,15 @@ _________________________________________________________________
 
 ---
 
-*[El reporte continúa con las secciones 5-8, pero debido a limitaciones de longitud, se presenta en este formato modular. Las secciones restantes incluyen: Entrenamiento e Implementación, Resultados Exhaustivos, Conclusiones, y Apéndices con código, configuraciones, e instrucciones de reproducción.]*
 
 ---
 
-**Fin del Reporte Técnico - Parte 1**
-
-*Para acceder a las secciones completas 5-8, consulte los archivos complementarios o el repositorio completo en GitHub.*
 
 
 
 ---
 
 
-## Clasificación de Sentimientos en Reseñas de Hoteles Andaluces mediante Redes Neuronales Recurrentes
-
-*Continuación de REPORTE_TECNICO.md*
-
----
 
 ## 5. Entrenamiento e Implementación
 
@@ -2914,8 +2905,7 @@ DeepLearningP2/
 │       │   ├── paper_final.tex
 │       │   ├── IEEEtai.cls
 │       │   └── README.md
-│       ├── REPORTE_TECNICO.md       # Reporte técnico completo (Parte 1)
-│       ├── REPORTE_TECNICO_PARTE2.md # Reporte técnico completo (Parte 2)
+│       ├── 03_reporte_tecnico.md    # Reporte técnico completo
 │       ├── RESULTADOS.md            # Resultados comparativos
 │       ├── INFORME_COMPLETO.md      # Informe completo
 │       ├── EXECUTIVO.md             # Resumen ejecutivo
@@ -3008,6 +2998,4 @@ dependencies:
 ---
 
 **Fin del Reporte Técnico Completo**
-
-*Este documento complementa REPORTE_TECNICO.md (Parte 1) con las secciones 5-8: Entrenamiento e Implementación, Resultados, Conclusiones, y Apéndices.*
 
