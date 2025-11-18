@@ -1,5 +1,13 @@
 # Resumen Ejecutivo: Clasificación de Sentimientos en Reseñas Hoteleras mediante RNNs
 
+**Autores**:  
+Anderson J. Alvarado¹ · David E. Moreno²
+
+¹ Pontificia Universidad Javeriana, andersonjalvarado@javeriana.edu.co  
+² Pontificia Universidad Javeriana, morenoa-david@javeriana.edu.co
+
+---
+
 ## Contexto y Objetivos
 
 Este proyecto implementa modelos de Redes Neuronales Recurrentes (RNN) para clasificar automáticamente el sentimiento (negativo, neutro, positivo) en 112,408 reseñas de hoteles andaluces. El análisis responde a tres casos de uso empresariales:

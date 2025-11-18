@@ -1,5 +1,13 @@
 # Informe Completo: Clasificación de Sentimientos en Reseñas de Hoteles Andaluces mediante Redes Neuronales Recurrentes
 
+**Autores**:  
+Anderson J. Alvarado¹ · David E. Moreno²
+
+¹ Pontificia Universidad Javeriana, andersonjalvarado@javeriana.edu.co  
+² Pontificia Universidad Javeriana, morenoa-david@javeriana.edu.co
+
+---
+
 ## Resumen Ejecutivo
 
 Este proyecto implementa y evalúa sistemáticamente modelos de Redes Neuronales Recurrentes (RNN) para la clasificación de sentimientos en reseñas de hoteles andaluces. Se exploraron 66 configuraciones experimentales combinando tres arquitecturas RNN (SimpleRNN, LSTM, GRU), cada una en versión unidireccional y bidireccional, con 11 variantes de preprocesamiento y representación textual.

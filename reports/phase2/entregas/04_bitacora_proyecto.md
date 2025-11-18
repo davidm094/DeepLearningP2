@@ -1,5 +1,13 @@
 ## Bitácora del Proyecto DeepLearningP2
 
+**Autores**:  
+Anderson J. Alvarado¹ · David E. Moreno²
+
+¹ Pontificia Universidad Javeriana, andersonjalvarado@javeriana.edu.co  
+² Pontificia Universidad Javeriana, morenoa-david@javeriana.edu.co
+
+---
+
 ### 2025-11-15
 - 17:15 — [GPU] CUDA runtime alineado a 12.6 e instalado cuda-nvcc; entrenamiento corto en GPU confirmado con LSTM 1 época
 - 16:53 — [PLAN] Estructura Fase 2 creada (data loader, configs, modelos, runner). Pendiente correr CV por falta del CSV oficial.

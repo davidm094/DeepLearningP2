@@ -1,6 +1,12 @@
 # Reporte Técnico Completo
 ## Clasificación de Sentimientos en Reseñas de Hoteles Andaluces mediante Redes Neuronales Recurrentes
 
+**Autores**:  
+Anderson J. Alvarado¹ · David E. Moreno²
+
+¹ Pontificia Universidad Javeriana, andersonjalvarado@javeriana.edu.co  
+² Pontificia Universidad Javeriana, morenoa-david@javeriana.edu.co
+
 **Proyecto**: DeepLearningP2 - Análisis de Sentimientos  
 **Fecha**: Noviembre 2025  
 **Versión**: 2.0 Final
