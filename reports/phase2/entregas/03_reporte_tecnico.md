@@ -796,7 +796,7 @@ embedding_layer = Embedding(
 - Captura similaridad semántica: `similar("excelente") = ["magnífico", "espectacular", "fantástico"]`
 
 **Desventajas**:
-- Requiere entrenamiento previo de Word2Vec (~5 min para 112k reseñas)
+- Requiere entrenamiento previo de Word2Vec (~5 min para 18,172 reseñas)
 - Palabras OOV tienen embeddings aleatorios (no están en Word2Vec)
 
 **Análisis de Similaridad Word2Vec** (C02, embedding_dim=128):
@@ -877,13 +877,11 @@ Esto asegura que:
 
 | Fold | Train Size | Val Size | Train % | Val % |
 |------|------------|----------|---------|-------|
-| 1 | 74,939 | 37,469 | 66.7% | 33.3% |
-| 2 | 74,939 | 37,469 | 66.7% | 33.3% |
-| 3 | 74,940 | 37,468 | 66.7% | 33.3% |
+| 1 | 12,114 | 6,058 | 66.7% | 33.3% |
+| 2 | 12,114 | 6,058 | 66.7% | 33.3% |
+| 3 | 12,115 | 6,057 | 66.7% | 33.3% |
 
 ---
-
-*[Continúa en la siguiente sección...]*
 
 ### 3.4 Pipeline Experimental
 
@@ -2360,7 +2358,7 @@ Real  Neg      0.82   0.08   0.10
 
 **Conclusión**: Todos los modelos bidireccionales cumplen requisito de latencia <1 ms/reseña, viables para producción en tiempo real.
 
-![Análisis de Eficiencia](../figuras/fig05_analisis_eficiencia.png)
+![Análisis de Eficiencia](../figuras/fig05_eficiencia.png)
 
 **Figura 6.4**: Trade-off entre F1-macro y tiempo de entrenamiento. BiLSTM y BiGRU ofrecen el mejor balance desempeño/eficiencia.
 
@@ -2552,7 +2550,7 @@ vocab_size: 30,000
 
 #### 7.3.2 Contribuciones Prácticas
 
-1. **Dataset de 112k Reseñas en Español**:
+1. **Dataset de 18,172 Reseñas en Español**:
    - Dominio hotelero andaluz
    - Etiquetado de sentimientos (negativo, neutro, positivo)
    - Disponible para investigación futura
