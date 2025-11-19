@@ -38,9 +38,9 @@ El artículo incluye:
 
 ## Figuras Incluidas
 
-El artículo referencia 8 figuras en formato PDF (ubicadas en `../figures/`):
+El artículo referencia 8 figuras en formato PDF (ubicadas en `../figuras/`):
 
-1. `fig1_class_distribution.pdf` - Distribución de clases en el dataset
+1. `fig01_distribucion_clases.pdf` - Distribución de clases en el dataset
 2. `fig2_length_distribution.pdf` - Distribución de longitud de reseñas por clase
 3. `fig3_f1_comparison.pdf` - Comparación de F1-macro por arquitectura
 4. `fig4_uni_vs_bi.pdf` - Comparación unidireccional vs bidireccional

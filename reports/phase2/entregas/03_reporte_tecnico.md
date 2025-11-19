@@ -2897,8 +2897,8 @@ DeepLearningP2/
 │   └── experiments.csv              # Registro central de experimentos
 ├── reports/
 │   └── phase2/
-│       ├── figures/                 # Gráficos generados
-│       │   ├── fig1_class_distribution.png
+│       ├── figuras/                 # Gráficos generados
+│       │   ├── fig01_distribucion_clases.png
 │       │   ├── fig2_length_distribution.png
 │       │   └── ...
 │       ├── ieee_paper/              # Artículo IEEE

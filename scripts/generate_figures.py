@@ -20,7 +20,7 @@ plt.rcParams['ytick.labelsize'] = 9
 plt.rcParams['legend.fontsize'] = 9
 
 # Create output directory
-output_dir = Path('reports/phase2/figures')
+output_dir = Path('reports/phase2/figuras')
 output_dir.mkdir(parents=True, exist_ok=True)
 
 # Load data
@@ -54,19 +54,27 @@ bars = ax.bar(range(len(label_counts)), label_counts.values, color=colors, alpha
 ax.set_xticks(range(len(label_counts)))
 ax.set_xticklabels(label_names, rotation=0)
 ax.set_ylabel('Number of Reviews')
-ax.set_title('Class Distribution in Andalusian Hotels Dataset (N=112,408)')
+total_reviews = len(df_data)
+ax.set_title(f'Class Distribution in Andalusian Hotels Dataset (N={total_reviews:,})')
 ax.grid(axis='y', alpha=0.3, linestyle='--')
+
+# Calculate dynamic offset for labels (5% of max height)
+max_height = max(label_counts.values)
+label_offset = max_height * 0.05
 
 # Add percentage labels on bars
 for i, (bar, count) in enumerate(zip(bars, label_counts.values)):
-    percentage = (count / len(df_data)) * 100
-    ax.text(bar.get_x() + bar.get_width()/2, bar.get_height() + 1000, 
+    percentage = (count / total_reviews) * 100
+    ax.text(bar.get_x() + bar.get_width()/2, bar.get_height() + label_offset, 
             f'{count:,}\n({percentage:.1f}%)', 
-            ha='center', va='bottom', fontweight='bold')
+            ha='center', va='bottom', fontweight='bold', fontsize=10)
+
+# Adjust ylim to accommodate labels
+ax.set_ylim(0, max_height * 1.15)
 
 plt.tight_layout()
-plt.savefig(output_dir / 'fig1_class_distribution.png', bbox_inches='tight')
-plt.savefig(output_dir / 'fig1_class_distribution.pdf', bbox_inches='tight')
+plt.savefig(output_dir / 'fig01_distribucion_clases.png', bbox_inches='tight')
+plt.savefig(output_dir / 'fig01_distribucion_clases.pdf', bbox_inches='tight')
 print("✓ Figure 1: Class Distribution")
 plt.close()
 
