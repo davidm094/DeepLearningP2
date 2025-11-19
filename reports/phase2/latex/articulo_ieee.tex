@@ -29,7 +29,7 @@
 \maketitle
 
 \begin{abstract}
-Este trabajo presenta un estudio sistemático de Redes Neuronales Recurrentes (RNN) para clasificación de sentimientos en 112,408 reseñas de hoteles andaluces. Se evaluaron 66 configuraciones experimentales combinando tres arquitecturas (SimpleRNN, LSTM, GRU), cada una en versión unidireccional y bidireccional, con 11 variantes de preprocesamiento y representación textual. Los resultados demuestran que la bidireccionalidad es crítica para el desempeño: modelos bidireccionales superan a unidireccionales por un factor de 3× en F1-macro (0.76 vs 0.25, p<0.001). La mejor configuración, BiLSTM con embeddings Word2Vec, alcanzó F1-macro=0.785, recall de clase negativa=0.823 y precisión de clase positiva=0.964, con tiempos de entrenamiento de 31 s/fold gracias a optimización cuDNN (aceleración de 112×). Se identificó que preprocesamiento mínimo es óptimo para modelos bidireccionales con embeddings densos, simplificando el pipeline de producción. Este estudio proporciona evidencia empírica robusta sobre diseño arquitectónico para clasificación de sentimientos en español, con aplicaciones directas en gestión de reputación hotelera.
+Este trabajo presenta un estudio sistemático de Redes Neuronales Recurrentes (RNN) para clasificación de sentimientos en 18,172 reseñas de hoteles andaluces. Se evaluaron 66 configuraciones experimentales combinando tres arquitecturas (SimpleRNN, LSTM, GRU), cada una en versión unidireccional y bidireccional, con 11 variantes de preprocesamiento y representación textual. Los resultados demuestran que la bidireccionalidad es crítica para el desempeño: modelos bidireccionales superan a unidireccionales por un factor de 3× en F1-macro (0.76 vs 0.25, p<0.001). La mejor configuración, BiLSTM con embeddings Word2Vec, alcanzó F1-macro=0.785, recall de clase negativa=0.823 y precisión de clase positiva=0.964, con tiempos de entrenamiento de 31 s/fold gracias a optimización cuDNN (aceleración de 112×). Se identificó que preprocesamiento mínimo es óptimo para modelos bidireccionales con embeddings densos, simplificando el pipeline de producción. Este estudio proporciona evidencia empírica robusta sobre diseño arquitectónico para clasificación de sentimientos en español, con aplicaciones directas en gestión de reputación hotelera.
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -40,7 +40,7 @@ Redes Neuronales Recurrentes, LSTM, GRU, Clasificación de Sentimientos, Procesa
 
 El análisis automatizado de sentimientos en reseñas online es fundamental para la gestión de reputación en el sector turístico. Las plataformas de reseñas (TripAdvisor, Booking, Google Reviews) generan millones de opiniones diarias que requieren procesamiento eficiente para informar decisiones estratégicas \cite{xiang2017}. Este trabajo aborda la clasificación de sentimientos en reseñas de hoteles andaluces, respondiendo a tres casos de uso empresariales: (1) sistema de alertas tempranas para detectar reseñas negativas, priorizando recall de clase negativa; (2) selección de testimonios positivos para marketing, priorizando precisión de clase positiva; y (3) dashboard estratégico con monitoreo equilibrado, priorizando F1-macro.
 
-El dataset de 112,408 reseñas presenta características desafiantes: desbalance severo (66\% positivas, 21\% neutrales, 13\% negativas), variabilidad lingüística (español con variaciones dialectales andaluzas), longitud heterogénea (1-2000+ tokens, promedio $\sim$180), y construcciones que invierten polaridad (sarcasmo, negación).
+El dataset de 18,172 reseñas presenta características desafiantes: desbalance severo (72.8\% positivas, 12.5\% neutrales, 14.7\% negativas), variabilidad lingüística (español con variaciones dialectales andaluzas), longitud heterogénea (7-1,416 palabras, promedio $\sim$79), y construcciones que invierten polaridad (sarcasmo, negación).
 
 \subsection{Contribuciones}
 
@@ -61,23 +61,23 @@ Schuster y Paliwal \cite{schuster1997} introdujeron RNNs bidireccionales, demost
 
 La literatura muestra resultados mixtos sobre preprocesamiento: algunos estudios reportan mejoras con lematización/stemming \cite{joshi2016}, mientras otros encuentran que embeddings densos capturan variaciones morfológicas \cite{bojanowski2017}. Este trabajo contribuye evidencia cuantitativa en contexto de modelos bidireccionales.
 
-Trabajos en español se han centrado en Twitter \cite{vilares2015} y reseñas de productos \cite{cruz2014}, con menor atención a dominio hotelero. Este estudio aporta dataset de 112k reseñas y metodología específica para español peninsular.
+Trabajos en español se han centrado en Twitter \cite{vilares2015} y reseñas de productos \cite{cruz2014}, con menor atención a dominio hotelero. Este estudio aporta dataset de 18,172 reseñas y metodología específica para español peninsular.
 
 \section{Metodología}
 
 \subsection{Dataset y Preprocesamiento}
 
-\textbf{Fuente}: Big Andalusian Hotels Reviews (112,408 reseñas).
+\textbf{Fuente}: Big Andalusian Hotels Reviews (18,172 reseñas).
 
-\textbf{Distribución de clases}: 13\% negativas (0), 21\% neutrales (3), 66\% positivas (1). La Fig. \ref{fig:class_dist} muestra el desbalance severo que motiva el uso de métricas macro y manejo de pesos de clase.
+\textbf{Distribución de clases}: 14.7\% negativas (0), 12.5\% neutrales (3), 72.8\% positivas (1). La Fig. \ref{fig:class_dist} muestra el desbalance severo que motiva el uso de métricas macro y manejo de pesos de clase.
 
 \begin{figure}[htbp]
 \centerline{\includegraphics[width=0.48\textwidth]{../figuras/fig01_distribucion_clases.pdf}}
-\caption{Distribución de clases en el dataset (N=112,408). El desbalance severo (66\% positivas vs 13\% negativas) requiere estrategias específicas de manejo.}
+\caption{Distribución de clases en el dataset (N=18,172). El desbalance severo (72.8\% positivas vs 14.7\% negativas) requiere estrategias específicas de manejo.}
 \label{fig:class_dist}
 \end{figure}
 
-\textbf{Estadísticas textuales}: Longitud promedio 180 tokens ($\sigma$=95), vocabulario $\sim$45,000 palabras únicas. La Fig. \ref{fig:length_dist} muestra que las reseñas negativas tienden a ser más largas (mediana 195 tokens) que las positivas (mediana 165 tokens), sugiriendo mayor elaboración en críticas.
+\textbf{Estadísticas textuales}: Longitud promedio 79 palabras ($\sigma$=95), vocabulario $\sim$45,000 palabras únicas. La Fig. \ref{fig:length_dist} muestra que las reseñas negativas tienden a ser más largas (mediana 165 palabras) que las positivas (mediana 148 palabras), sugiriendo mayor elaboración en críticas.
 
 \begin{figure}[htbp]
 \centerline{\includegraphics[width=0.48\textwidth]{../figuras/fig02_longitud_resenas.pdf}}
@@ -229,7 +229,7 @@ Este hallazgo contrasta con literatura previa \cite{joshi2016} que reporta mejor
 La Fig. \ref{fig:efficiency} muestra el trade-off entre F1-macro y tiempo de entrenamiento. BiLSTM (C02) ofrece el mejor F1 (0.785) con tiempo competitivo (31 s/fold). BiGRU (C05) es 10\% más rápido (28 s/fold) con F1 ligeramente inferior (0.768), ideal para producción con restricciones de latencia. Los modelos unidireccionales son más rápidos pero no viables por bajo F1 (<0.32).
 
 \begin{figure}[htbp]
-\centerline{\includegraphics[width=0.48\textwidth]{../figuras/fig05_analisis_eficiencia.pdf}}
+\centerline{\includegraphics[width=0.48\textwidth]{../figuras/fig05_eficiencia.pdf}}
 \caption{Trade-off entre F1-macro y tiempo de entrenamiento. BiLSTM y BiGRU ofrecen el mejor balance desempeño/eficiencia.}
 \label{fig:efficiency}
 \end{figure}

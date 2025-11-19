@@ -60,7 +60,7 @@ Schuster y Paliwal \cite{schuster1997} introdujeron RNNs bidireccionales, demost
 
 La literatura muestra resultados mixtos sobre preprocesamiento: algunos estudios reportan mejoras con lematización/stemming \cite{joshi2016}, mientras otros encuentran que embeddings densos capturan variaciones morfológicas \cite{bojanowski2017}. Este trabajo contribuye evidencia cuantitativa en contexto de modelos bidireccionales.
 
-Trabajos en español se han centrado en Twitter \cite{vilares2015} y reseñas de productos \cite{cruz2014}, con menor atención a dominio hotelero. Este estudio aporta dataset de 112k reseñas y metodología específica para español peninsular.
+Trabajos en español se han centrado en Twitter \cite{vilares2015} y reseñas de productos \cite{cruz2014}, con menor atención a dominio hotelero. Este estudio aporta dataset de 18,172 reseñas y metodología específica para español peninsular.
 
 \section{Metodología}
 
@@ -76,7 +76,7 @@ Trabajos en español se han centrado en Twitter \cite{vilares2015} y reseñas de
 \label{fig:class_dist}
 \end{figure}
 
-\textbf{Estadísticas textuales}: Longitud promedio 180 tokens ($\sigma$=95), vocabulario $\sim$45,000 palabras únicas. La Fig. \ref{fig:length_dist} muestra que las reseñas negativas tienden a ser más largas (mediana 195 tokens) que las positivas (mediana 165 tokens), sugiriendo mayor elaboración en críticas.
+\textbf{Estadísticas textuales}: Longitud promedio 79 palabras ($\sigma$=95), vocabulario $\sim$45,000 palabras únicas. La Fig. \ref{fig:length_dist} muestra que las reseñas negativas tienden a ser más largas (mediana 165 palabras) que las positivas (mediana 148 palabras), sugiriendo mayor elaboración en críticas.
 
 \begin{figure}[htbp]
 \centerline{\includegraphics[width=0.48\textwidth]{../figuras/fig02_longitud_resenas.pdf}}
@@ -228,7 +228,7 @@ Este hallazgo contrasta con literatura previa \cite{joshi2016} que reporta mejor
 La Fig. \ref{fig:efficiency} muestra el trade-off entre F1-macro y tiempo de entrenamiento. BiLSTM (C02) ofrece el mejor F1 (0.785) con tiempo competitivo (31 s/fold). BiGRU (C05) es 10\% más rápido (28 s/fold) con F1 ligeramente inferior (0.768), ideal para producción con restricciones de latencia. Los modelos unidireccionales son más rápidos pero no viables por bajo F1 (<0.32).
 
 \begin{figure}[htbp]
-\centerline{\includegraphics[width=0.48\textwidth]{../figuras/fig05_analisis_eficiencia.pdf}}
+\centerline{\includegraphics[width=0.48\textwidth]{../figuras/fig05_eficiencia.pdf}}
 \caption{Trade-off entre F1-macro y tiempo de entrenamiento. BiLSTM y BiGRU ofrecen el mejor balance desempeño/eficiencia.}
 \label{fig:efficiency}
 \end{figure}

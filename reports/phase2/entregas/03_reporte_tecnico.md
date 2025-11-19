@@ -2594,7 +2594,7 @@ vocab_size: 30,000
 #### 7.4.2 Limitaciones del Dataset
 
 1. **Desbalance Severo**:
-   - 66% positivas, 21% neutrales, 13% negativas
+   - 72.8% positivas, 12.5% neutrales, 14.7% negativas
    - Manejo con pesos de clase, pero sesgo residual hacia clase mayoritaria
    - Mitigación: Métricas macro y monitoreo de recall_neg
 

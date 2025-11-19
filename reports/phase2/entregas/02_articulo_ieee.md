@@ -34,7 +34,7 @@ El dataset de 18,172 reseñas presenta características que lo hacen particularm
 
 - **Desbalance severo**: 72.8% positivas, 12.5% neutrales, 14.7% negativas.
 - **Variabilidad lingüística**: Español con variaciones dialectales andaluzas.
-- **Longitud heterogénea**: Rango de 1 a 2000+ tokens (promedio ~180).
+- **Longitud heterogénea**: Rango de 7 a 1,416 palabras (promedio ~79).
 - **Sarcasmo y negación**: Construcciones que invierten polaridad ("No es malo" = positivo).
 
 ### 1.3 Contribuciones
@@ -64,7 +64,7 @@ La literatura muestra resultados mixtos sobre preprocesamiento: algunos estudios
 
 ### 2.4 Análisis de Sentimientos en Español
 
-Trabajos en español se han centrado en Twitter [10] y reseñas de productos [11], con menor atención a dominio hotelero. Este estudio aporta dataset de 112k reseñas y metodología específica para español peninsular.
+Trabajos en español se han centrado en Twitter [10] y reseñas de productos [11], con menor atención a dominio hotelero. Este estudio aporta dataset de 18,172 reseñas y metodología específica para español peninsular.
 
 ---
 
@@ -82,7 +82,7 @@ Trabajos en español se han centrado en Twitter [10] y reseñas de productos [11
 - **Etiquetas**: Negativo (0), Neutro (3), Positivo (1).
 - **Distribución**: 14.7% negativas, 12.5% neutrales, 72.8% positivas.
 - **Estadísticas textuales**:
-  - Longitud promedio: 180 tokens (σ=95).
+  - Longitud promedio: 79 palabras (σ=95).
   - Vocabulario: ~45,000 palabras únicas.
   - Idioma: Español con variaciones andaluzas.
 

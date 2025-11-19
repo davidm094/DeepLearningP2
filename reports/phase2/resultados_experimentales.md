@@ -34,10 +34,10 @@ El análisis de sentimientos en reseñas de hoteles es fundamental para la gesti
 
 El análisis exploratorio de la Fase 1 (`docs/resources/entregas/Proyecto_DL_Fase1.pdf`) reveló:
 
-- **Dataset**: 112,408 reseñas de hoteles andaluces con etiquetas de sentimiento (negativo=0, neutro=3, positivo=1).
-- **Desbalance severo**: 66% positivas, 21% neutrales, 13% negativas.
+- **Dataset**: 18,172 reseñas de hoteles andaluces con etiquetas de sentimiento (negativo=0, neutro=3, positivo=1).
+- **Desbalance severo**: 72.8% positivas, 12.5% neutrales, 14.7% negativas.
 - **Características textuales**:
-  - Longitud promedio: ~180 tokens (rango 1-2000+).
+  - Longitud promedio: ~79 palabras (rango 7-1,416).
   - Vocabulario: ~45,000 palabras únicas.
   - Idioma: español con variaciones dialectales andaluzas.
 - **Desafíos identificados**:
@@ -842,7 +842,7 @@ La metodología y hallazgos son generalizables a otros dominios de clasificació
 
 ## Referencias
 
-1. **Dataset**: Big Andalusian Hotels Reviews (112,408 reseñas), proporcionado para el proyecto.
+1. **Dataset**: Big Andalusian Hotels Reviews (18,172 reseñas), proporcionado para el proyecto.
 
 2. **Frameworks y Librerías**:
    - TensorFlow 2.19.0 con CUDA 12.6
