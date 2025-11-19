@@ -2205,15 +2205,17 @@ Real  Neg      0.82   0.08   0.10
    - 4% confundidas con neutrales (casos moderados)
    - 1% confundidas con negativas (muy raros, posible ruido en etiquetas)
 
-**Métricas por Clase** (detalladas):
+**Métricas por Clase** (detalladas, promedio de 3 folds):
 
-| Clase | Precision | Recall | F1-Score | Support |
-|-------|-----------|--------|----------|---------|
-| Negativo (0) | 0.928 | 0.823 | 0.872 | 4,871 |
-| Neutral (3) | 0.871 | 0.682 | 0.765 | 7,868 |
-| Positivo (1) | 0.964 | 0.980 | 0.972 | 24,730 |
-| **Macro Avg** | **0.921** | **0.828** | **0.870** | **37,469** |
-| **Weighted Avg** | **0.943** | **0.927** | **0.933** | **37,469** |
+| Clase | Precision | Recall | F1-Score | Support* |
+|-------|-----------|--------|----------|----------|
+| Negativo (0) | 0.928 | 0.823 | 0.872 | ~890 |
+| Neutral (3) | 0.871 | 0.682 | 0.765 | ~757 |
+| Positivo (1) | 0.964 | 0.980 | 0.972 | ~4,410 |
+| **Macro Avg** | **0.921** | **0.828** | **0.870** | **~6,058** |
+| **Weighted Avg** | **0.943** | **0.927** | **0.933** | **~6,058** |
+
+*Support indica el número de ejemplos reales de cada clase en un fold de validación (~6,058 reseñas por fold). Las métricas (Precision, Recall, F1-Score) son promedios de los 3 folds.
 
 **Observaciones**:
 
