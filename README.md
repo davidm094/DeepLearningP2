@@ -11,6 +11,7 @@ Proyecto de clasificación de sentimiento para reseñas de hoteles andaluces uti
 | `config/` | Configuraciones YAML (por ejemplo `phase2.yaml` con hiperparámetros y rutas). |
 | `data/` | Datos locales (ej. `Big_AHR.csv`). No se versionan resultados intermedios. |
 | `artifacts/` | Salidas generadas (folds preparados, pesos, métricas, `experiments.csv`). Ignorados en control de versiones. |
+| `notebooks/` | **Nuevo**: Notebooks para reproducción interactiva (`C02_bilstm_pipeline.ipynb`). |
 | `docs/phase2/` | Documentación técnica: `01_plan_experimental.md`, `02_combinaciones.md`, `03_arquitectura_modelos.md`, `04_pipeline.md`, `05_dataset.md`. |
 | `docs/resources/` | Material de referencia reorganizado (entregas previas, instrucciones, templates IEEE, casos de uso). |
 | `reports/phase2/` | **Documentos de entrega y resultados**:<br>• `entregas/` - Documentos oficiales numerados<br>• `figuras/` - 8 figuras de alta calidad (PDF + PNG)<br>• `latex/` - Archivos LaTeX del artículo IEEE<br>• `resultados_experimentales.md` - Resultados detallados |
@@ -48,7 +49,22 @@ Los documentos oficiales están en `reports/phase2/entregas/`:
 3. **Datos**: colocar `Big_AHR.csv` en `data/` (112,408 reseñas).
 4. **GPU**: RTX 3090 o equivalente con 24 GB VRAM. Exportar `TF_FORCE_GPU_ALLOW_GROWTH=true` y `TF_GPU_ALLOCATOR=cuda_malloc_async`.
 
+### Instalación (macOS / Apple Silicon)
+
+Para usuarios de Mac con chips M1/M2/M3, se ha provisto un entorno compatible (`tensorflow` + `metal`, `torch` CPU/MPS).
+
+```bash
+conda env create -f 03_setup/environment.mac.yml
+conda activate dl_project
+python -m spacy download es_core_news_sm
+```
+
 ## Flujo de trabajo
+
+### 0. Reproducción rápida (Notebook)
+
+Para replicar interactivamente el mejor modelo (C02 - BiLSTM), abrir:
+`notebooks/C02_bilstm_pipeline.ipynb`
 
 ### 1. Preparar datos y folds
 
@@ -144,7 +160,12 @@ pdflatex articulo_ieee.tex  # Segunda pasada para referencias
 
 2. **Crear entorno**:
    ```bash
-   conda env create -f environment.yml
+   # Opción A: Linux/CUDA (Recomendado para producción)
+   conda env create -f 03_setup/environment.lock.yml
+   
+   # Opción B: macOS (Apple Silicon)
+   conda env create -f 03_setup/environment.mac.yml
+   
    conda activate dl_project
    python -m spacy download es_core_news_sm
    ```
