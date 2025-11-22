@@ -1,0 +1,43 @@
+name: dl_project
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  # --- Core ---
+  - python=3.11
+  - pip
+  - numpy
+  - pandas
+  - scipy
+  - scikit-learn
+  
+  # --- Notebooks & visualización ---
+  - jupyterlab
+  - matplotlib
+  - seaborn
+  
+  # --- NLP utilidades ---
+  - nltk
+  - spacy
+  
+  # --- ML complementario ---
+  - xgboost
+  - lightgbm
+
+  # --- Paquetes pip ---
+  - pip:
+      # TensorFlow (macOS ARM64 compatible)
+      - tensorflow==2.16.1  # Versiones recientes suelen ir bien en Mac
+      # Nota: tensorflow-text no tiene soporte oficial en Mac ARM64, se omite.
+      - tensorflow-hub
+      - tf-keras
+      
+      # PyTorch (CPU/MPS support included in standard wheels for Mac)
+      - torch==2.2.2
+      
+      # Otros
+      - gensim
+      - pyyaml
+      - tqdm
+
+
